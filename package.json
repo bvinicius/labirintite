@@ -1,0 +1,26 @@
+{
+  "name": "ia-trabalho1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bvinicius/labirintite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bvinicius/labirintite/issues"
+  },
+  "homepage": "https://github.com/bvinicius/labirintite#readme",
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  }
+}
