@@ -2,58 +2,59 @@ const Directions = require('./directions');
 const Scores = require('./scores');
 
 class Cromossome {
-    constructor() {
+    constructor(directionsSequence, maze) {
         this.score = 0;
-        this.path = [0, 0];
+        this.currentPosition = [0, 0];
+        this.path = [this.currentPosition];
+        this.directionsSequence = directionsSequence;
+        this.maze = maze;
     }
 
-    get currentPosition() {
-        return this.path[this.path.length - 1];
+    go() {
+        this.directionsSequence.forEach((direction) => {
+            this.walk(direction, this.maze);
+        });
     }
 
-    walk(eDirection, maze) {
-
-        const newPosition = this.currentPosition;
+    walk(eDirection) {
 
         switch (eDirection) {
             case Directions.UP:
-                newPosition[0]--;
+                this.currentPosition[0]--;
                 break;
             case Directions.DOWN:
-                newPosition[0]++;
+                this.currentPosition[0]++;
                 break;
             case Directions.LEFT:
-                newPosition[1]--;
+                this.currentPosition[1]--;
                 break;
             case Directions.RIGHT:
-                newPosition[1]++;
+                this.currentPosition[1]++;
                 break;
         }
 
-        if (this.hasFinished(newPosition, maze)) {
+        if (this.hasFinished()) {
             console.log('chegou!!');
             return;
         }
 
-        this.computePenalties(newPosition, maze);
-        this.path.push(newPosition);
+        this.computeScores();
+        this.path.push(this.currentPosition);
     }
 
-    hasFinished(newPosition, maze) {
-        return maze[newPosition[0], newPosition[1]] === 'S';
+    hasFinished() {
+        const [line, column] = this.currentPosition;
+        return this.maze[line, column] === 'S';
     }
 
     /**
      * Adiciona ou retira pontos de acordo com as penalidades.
-     * @param {*} newPosition 
+     * @param {*} position 
      */
-    computePenalties(newPosition, maze) {
-        let score = 0;
-        score += this.currentPosition.some((value) => value < 0 || value > 11) ? Scores.invalidWalk : 0; // caiu fora do labirinto
-        score += maze[this.currentPosition[0], this.currentPosition[1]] === '1' ? Scores.invalidWalk : 0; // foi para a parede
-        score += maze[this.currentPosition[0], this.currentPosition[1]] === '0' ? Scores.validWalk : 0; // andou corretamente
-        score += this.path.includes(newPosition) ? Scores.back : 0; // já passou por esse ponto
-        this.score += score;
+    computeScores() {
+        Object.values(Scores).forEach((objScore) => {
+            this.score += objScore.happened(this) ? objScore.score : 0;
+        });
     }
 }
 

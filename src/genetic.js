@@ -1,3 +1,4 @@
+const Cromossome = require('./cromossome');
 const Directions = require('./directions');
 
 class Genetic {
@@ -5,10 +6,11 @@ class Genetic {
         this.directionsPossibilities = Object.keys(Directions).length;
     }
 
-    populate(quantity, steps) {
+    populate(quantity, steps, maze) {
         return Array(quantity)
             .fill(null)
-            .map(() => Array.from({ length: steps }, () => this.getRandomDirection()));
+            .map(() => Array.from({ length: steps }, () => this.getRandomDirection()))
+            .map((directionsSequence) => new Cromossome(directionsSequence, maze));
     }
 
     getRandomDirection() {
