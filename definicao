@@ -1,0 +1,16 @@
+CROMOSSOMOS
+
+POPULAÇÃO
+
+PONTUAÇÕES
+    - Individuo começa com 0
+    - Se voltar a uma casa, perde 5
+    - Se sair do labirinto, perde 10
+    - Se ir pra parede 1, perde 10
+    - Se ir para um 0, ganha 1
+
+RESTRIÇÕES
+    - A lista da solução pode ter um tamanho máximo igual ao número de caminhos livres (número de zeros).
+
+FUNÇÃO HEURISTICA
+    - O melhor modelo se dá pela maior pontuação geral do cromossomo.
