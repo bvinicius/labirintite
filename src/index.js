@@ -5,8 +5,9 @@ const strInput = fs.readFileSync('../maze.txt').toString();
 const freeSpotsAmount = (strInput.match(/0/g) || []).length;
 
 const parameters = {
-    POPULATION_SIZE: 10,
-    MAX_STEPS: freeSpotsAmount
+    POPULATION_SIZE: 4,
+    MAX_STEPS: /*freeSpotsAmount*/ 5,
+    ITERATIONS: 10000
 };
 
 const maze = strInput
@@ -15,18 +16,23 @@ const maze = strInput
 
 const genetic = new Genetic(maze, parameters);
 
-const population = genetic.populate(parameters.POPULATION_SIZE, parameters.MAX_STEPS, maze);
-population.forEach((cromossome) => {
-    cromossome.go();
-});
+let population = genetic.populate(parameters.POPULATION_SIZE, parameters.MAX_STEPS, maze);
 
-// casal dos melhores cromossomos
-const [mom, dad] = genetic.getBestParents(population);
-genetic.generateNewPopulation(mom, dad);
+let iterationsCount = 0;
+while (iterationsCount < parameters.ITERATIONS) {
+    genetic.runPopulation(population);
+    const [mom, dad] = genetic.getBestParents(population);
+
+    population = genetic.generateNewPopulation(mom, dad);
+
+    console.log('best score in this round', mom.score);
+    iterationsCount++;
+}
+
+console.log('ok!');
 
 // PASSO 1: Definir uma matriz de X vetores com direções aleatórias (POPULAÇÃO) [OK]
 // PASSO 2: Fazer o cálculo da aptidão para cada individuo da população [OK]
-
 // PASSO 3: Se não encontrar solução, selecionar pais para a próxima etapa (com elitismo ou torneio)
 
 // PASSO 4: Cruzamento dos pais (tem vários tipos, definir.)

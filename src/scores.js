@@ -1,19 +1,23 @@
 module.exports = Object.freeze({
     repeatedPosition: {
-        score: -5,
-        happened: detectRepeatedPosition
+        score: -500,
+        happened: detectRepeatedPosition,
+        isPenalty: true
     },
     walkedIntoWall: {
-        score: -10,
-        happened: detectIntoWall
+        score: -1000,
+        happened: detectIntoWall,
+        isPenalty: true
     },
     outOfMaze: {
-        score: -10,
-        happened: detectOutOfMaze
+        score: -10000,
+        happened: detectOutOfMaze,
+        isPenalty: true
     },
     validWalk: {
-        score: 10,
-        happened: detectValidWalk
+        score: 10000,
+        happened: detectValidWalk,
+        isPenalty: false
     }
 });
 

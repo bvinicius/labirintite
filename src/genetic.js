@@ -15,6 +15,12 @@ class Genetic {
             .map((directionsSequence) => new Cromossome(directionsSequence, this.maze));
     }
 
+    runPopulation(population) {
+        population.forEach((cromossome) => {
+            cromossome.go();
+        });
+    }
+
     getRandomDirection() {
         return Math.floor(Math.random() * this.directionsPossibilities);
     }
@@ -24,9 +30,20 @@ class Genetic {
     }
 
     generateNewPopulation(mom, dad) {
-        const newPopulation = [];
+        return this.recursivelyGenerateNewPopulation(mom, dad, []);
+    }
+
+    recursivelyGenerateNewPopulation(mom, dad, population) {
         const children = this.crossover(mom, dad);
-        newPopulation.push(...children);
+        population.push(...children);
+        this.runPopulation(population);
+
+        if (population.length < this.parameters.POPULATION_SIZE) {
+            const [newMom, newDad] = this.getBestParents(population);
+            return this.recursivelyGenerateNewPopulation(newMom, newDad, population);
+        }
+
+        return population;
     }
 
     /**

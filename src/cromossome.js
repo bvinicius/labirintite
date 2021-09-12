@@ -5,19 +5,22 @@ class Cromossome {
     constructor(directionsSequence, maze) {
         this.score = 0;
         this.currentPosition = [0, 0];
-        this.path = [[...this.currentPosition]];
+        this.path = [[this.currentPosition[0], this.currentPosition[1]]];
         this.directionsSequence = directionsSequence;
         this.maze = maze;
+        this.validPath = true;
+        this.reachesTarget = false;
+    }
+
+    get isSolution() {
+        return this.validPath && this.reachesTarget;
     }
 
     go() {
-        this.directionsSequence.forEach((direction) => {
-            this.walk(direction, this.maze);
-        });
+        this.directionsSequence.forEach((direction) => { this.walk(direction, this.maze); });
     }
 
     walk(eDirection) {
-
         switch (eDirection) {
             case Directions.UP:
                 this.currentPosition[0]--;
@@ -34,8 +37,7 @@ class Cromossome {
         }
 
         if (this.hasFinished()) {
-            console.log('chegou!!');
-            return;
+            this.reachesTarget = true;
         }
 
         this.computeScores();
@@ -53,7 +55,13 @@ class Cromossome {
      */
     computeScores() {
         Object.values(Scores).forEach((objScore) => {
-            this.score += objScore.happened(this) ? objScore.score : 0;
+            if (objScore.happened(this)) {
+                this.score += objScore.score;
+                if (objScore.isPenalty) {
+                    console.log('\n PENALTY! \n');
+                    this.validPath = false;
+                }
+            }
         });
     }
 }
