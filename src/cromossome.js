@@ -5,7 +5,7 @@ class Cromossome {
     constructor(directionsSequence, maze) {
         this.score = 0;
         this.currentPosition = [0, 0];
-        this.path = [this.currentPosition];
+        this.path = [[...this.currentPosition]];
         this.directionsSequence = directionsSequence;
         this.maze = maze;
     }
@@ -39,7 +39,7 @@ class Cromossome {
         }
 
         this.computeScores();
-        this.path.push(this.currentPosition);
+        this.path.push([...this.currentPosition]);
     }
 
     hasFinished() {
