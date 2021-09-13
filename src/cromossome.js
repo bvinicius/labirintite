@@ -10,13 +10,14 @@ class Cromossome {
         this.maze = maze;
         this.validPath = true;
         this.reachesTarget = false;
+        this.moved = false;
     }
 
     get isSolution() {
         return this.validPath && this.reachesTarget;
     }
 
-    go() {
+    move() {
         this.directionsSequence.forEach((direction) => { this.walk(direction, this.maze); });
     }
 
@@ -42,6 +43,7 @@ class Cromossome {
 
         this.computeScores();
         this.path.push([...this.currentPosition]);
+        this.moved = true;
     }
 
     hasFinished() {
@@ -58,7 +60,7 @@ class Cromossome {
             if (objScore.happened(this)) {
                 this.score += objScore.score;
                 if (objScore.isPenalty) {
-                    console.log('\n PENALTY! \n');
+                    // console.log('\n PENALTY! \n');
                     this.validPath = false;
                 }
             }

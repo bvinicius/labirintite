@@ -17,7 +17,7 @@ class Genetic {
 
     runPopulation(population) {
         population.forEach((cromossome) => {
-            cromossome.go();
+            !cromossome.moved && cromossome.move();
         });
     }
 
@@ -26,7 +26,12 @@ class Genetic {
     }
 
     getBestParents(population) {
-        return population.sort((prev, next) => next.score - prev.score).slice(0, 2);
+        const sorted = population.sort((prev, next) => {
+            return next.score - prev.score;
+        });
+
+        const slicedSorted = sorted.slice(0, 2);
+        return slicedSorted;
     }
 
     generateNewPopulation(mom, dad) {
@@ -34,7 +39,8 @@ class Genetic {
     }
 
     recursivelyGenerateNewPopulation(mom, dad, population) {
-        const children = this.crossover(mom, dad);
+        const mask = this.getBinaryMask(mom.directionsSequence.length);
+        const children = this.uniformCrossOver(mom, dad, mask);
         population.push(...children);
         this.runPopulation(population);
 
@@ -46,12 +52,16 @@ class Genetic {
         return population;
     }
 
+    getBinaryMask(length) {
+        return Array.from({ length }, () => Math.random() > 0.5 ? 0 : 1);
+    }
+
     /**
      * Crossover uniponto
      * @param {*} mom 
      * @param {*} dad 
      */
-    crossover(mom, dad) {
+    uniPointCrossover(mom, dad) {
         const momSequence = mom.directionsSequence;
         const dadSequence = dad.directionsSequence;
 
@@ -62,6 +72,26 @@ class Genetic {
 
         const firstChild = new Cromossome(firstChildDirections, this.maze);
         const secondChild = new Cromossome(secondChildDirections, this.maze);
+        return [firstChild, secondChild];
+    }
+
+    uniformCrossOver(mom, dad, mask) {
+        const firstChildDirection = [];
+        const secondChildDirection = [];
+
+        mask.forEach((value, index) => {
+            if (value === 1) {
+                firstChildDirection.push(mom.directionsSequence[index]);
+                secondChildDirection.push(dad.directionsSequence[index]);
+            } else {
+                firstChildDirection.push(dad.directionsSequence[index]);
+                secondChildDirection.push(mom.directionsSequence[index]);
+            }
+        });
+
+        const firstChild = new Cromossome(firstChildDirection, this.maze);
+        const secondChild = new Cromossome(secondChildDirection, this.maze);
+
         return [firstChild, secondChild];
     }
 }

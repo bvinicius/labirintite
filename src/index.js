@@ -5,8 +5,8 @@ const strInput = fs.readFileSync('../maze.txt').toString();
 const freeSpotsAmount = (strInput.match(/0/g) || []).length;
 
 const parameters = {
-    POPULATION_SIZE: 4,
-    MAX_STEPS: /*freeSpotsAmount*/ 5,
+    POPULATION_SIZE: 40,
+    MAX_STEPS: freeSpotsAmount,
     ITERATIONS: 10000
 };
 
@@ -22,10 +22,8 @@ let iterationsCount = 0;
 while (iterationsCount < parameters.ITERATIONS) {
     genetic.runPopulation(population);
     const [mom, dad] = genetic.getBestParents(population);
-
     population = genetic.generateNewPopulation(mom, dad);
-
-    console.log('best score in this round', mom.score);
+    console.log('best score in this round', genetic.getBestParents(population)[0].score);
     iterationsCount++;
 }
 

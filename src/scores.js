@@ -27,7 +27,7 @@ function detectRepeatedPosition(cromossome) {
 
 function detectIntoWall(cromossome) {
     const [line, column] = cromossome.currentPosition;
-    return cromossome.maze[line, column] === '1';
+    return cromossome.maze[line, column] == '1';
 }
 
 function detectOutOfMaze(cromossome) {
@@ -36,5 +36,5 @@ function detectOutOfMaze(cromossome) {
 
 function detectValidWalk(cromossome) {
     const [line, column] = cromossome.currentPosition;
-    return cromossome.maze[line, column] === '0';
+    return cromossome.maze[line, column] == '0';
 }
