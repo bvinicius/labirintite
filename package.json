@@ -2,12 +2,12 @@
   "name": "ia-trabalho1",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "directories": {
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": " npx webpack --config webpack.config.js --mode development --watch"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,13 @@
   },
   "homepage": "https://github.com/bvinicius/labirintite#readme",
   "devDependencies": {
-    "eslint": "^7.32.0"
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.6",
+    "babel-loader": "^8.2.2",
+    "eslint": "^7.32.0",
+    "serve": "^12.0.1",
+    "webpack": "^5.53.0",
+    "webpack-cli": "^4.8.0"
   }
 }

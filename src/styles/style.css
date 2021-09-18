@@ -1,0 +1,20 @@
+.point {
+  height: 30px;
+  width: 30px;
+}
+
+.wall {
+  background-color: black;
+}
+
+.free {
+  background-color: #aaa;
+}
+
+.start {
+  background-color: red;
+}
+
+.end {
+  background-color: green;
+}
