@@ -40,6 +40,7 @@ class MazeBuilder {
   }
 
   setAgentPosition([row, column]) {
+    console.log("setAngentPosition");
     const $row = this.$rootElement.children[row];
     if (!$row) {
       return;

@@ -39,10 +39,18 @@
           type="number"
         />
       </div>
+      <div class="parameters-container">
+        <label for="path">Caminho</label>
+        <input name="path" class="parameter-input" id="path" type="text" />
+      </div>
     </div>
     <div class="button-container">
-      <button id="startButton">EXECUTAR</button>
+      <button id="startButton">
+        <span>EXECUTAR</span>
+        <div id="loader" class="loader"></div>
+      </button>
     </div>
+
     <div class="maze-container"></div>
   </body>
 </html>

@@ -1,4 +1,4 @@
-import geneticManager from "../managers/geneticManager";
+// import mazeBuilder from "../managers/mazeBuilder";
 import mazeBuilder from "../managers/mazeBuilder";
 import directions from "./directions";
 import scores from "./scores";
@@ -35,7 +35,7 @@ class Cromossome {
   }
 
   step(eDirection) {
-    console.log("RESOLVING");
+    console.log("should take step");
     switch (eDirection) {
       case directions.UP:
         this.currentPosition[0]--;
@@ -75,7 +75,6 @@ class Cromossome {
       if (objScore.happened(this)) {
         this.score += objScore.score;
         if (objScore.isPenalty) {
-          // console.log('\n PENALTY! \n');
           this.validPath = false;
         }
       }
