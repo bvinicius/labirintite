@@ -2,10 +2,10 @@ import Cromossome from "../model/cromossome";
 import directions from "../model/directions";
 
 class GeneticManager {
-  constructor(maze, parameters) {
+  constructor() {
     this.directionsPossibilities = Object.keys(directions).length;
-    this.maze = maze;
-    this.parameters = parameters;
+    this.maze = null;
+    this.parameters = {};
   }
 
   populate(quantity, steps) {
@@ -104,4 +104,4 @@ class GeneticManager {
   }
 }
 
-export default GeneticManager;
+export default new GeneticManager();

@@ -1,5 +1,19 @@
 class MazeBuilder {
+  constructor() {
+    this.$_agent = null;
+  }
+
+  get $agent() {
+    if (!this.$_agent) {
+      this.$_agent = document.createElement("div");
+      this.$_agent.classList.add("agent");
+    }
+
+    return this.$_agent;
+  }
+
   build(matrix, $table) {
+    this.$rootElement = $table;
     matrix.forEach((row) => {
       const $row = document.createElement("tr");
       row.forEach((cell) => {
@@ -23,6 +37,16 @@ class MazeBuilder {
       });
       $table.appendChild($row);
     });
+  }
+
+  setAgentPosition([row, column]) {
+    const $row = this.$rootElement.children[row];
+    if (!$row) {
+      return;
+    }
+
+    const $point = $row.children[column];
+    $point && $point.appendChild(this.$agent);
   }
 }
 

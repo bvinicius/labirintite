@@ -1,4 +1,4 @@
-import GeneticManager from "./managers/geneticManager";
+import genetic from "./managers/geneticManager";
 import mazeBuilder from "./managers/mazeBuilder";
 
 const strInput = `E 0 0 0 0 0 0 0 0 0 0 0\n1 1 1 1 0 0 0 0 0 1 1 1\n1 0 0 0 0 1 1 1 0 1 1 0\n1 0 1 1 1 1 1 1 0 0 0 0\n0 0 0 1 0 0 0 0 1 0 1 1\n1 1 0 0 0 1 0 1 0 0 1 1\n1 1 1 0 1 1 0 0 0 1 1 0\n0 0 1 0 0 1 0 1 0 1 1 0\n0 0 0 0 1 1 0 0 0 1 1 0\n1 1 1 0 1 0 0 1 1 1 1 0\n1 1 1 0 1 0 0 0 0 1 1 1\n1 1 1 0 0 0 0 1 0 0 0 S`;
@@ -7,6 +7,7 @@ const parameters = {
   POPULATION_SIZE: 40,
   MAX_STEPS: freeSpotsAmount,
   ITERATIONS: 10000,
+  DELAY: 100,
 };
 
 const maze = strInput.split("\n").map((line) => line.split(" "));
@@ -15,12 +16,12 @@ window.onload = () => {
   mazeBuilder.build(maze, document.querySelector(".maze-container"));
 
   const $runButton = document.querySelector("#startButton");
-  const [$populationInput, $iterationsInput] = document.querySelectorAll(
-    "input.parameter-input"
-  );
+  const [$populationInput, $iterationsInput, $delayInput] =
+    document.querySelectorAll("input.parameter-input");
 
   $populationInput.value = parameters.POPULATION_SIZE;
   $iterationsInput.value = parameters.ITERATIONS;
+  $delayInput.value = parameters.DELAY;
 
   $runButton.addEventListener("click", onStartButtonClick);
 };
@@ -28,18 +29,19 @@ window.onload = () => {
 const freeSpotsAmount = (strInput.match(/0/g) || []).length;
 
 function onStartButtonClick() {
-  const [$populationInput, $iterationsInput] = document.querySelectorAll(
-    "input.parameter-input"
-  );
+  const [$populationInput, $iterationsInput, $delayInput] =
+    document.querySelectorAll("input.parameter-input");
 
-  parameters.POPULATION_SIZE = $populationInput.value;
-  parameters.MAX_STEPS = $iterationsInput.value;
+  parameters.POPULATION_SIZE = +$populationInput.value;
+  parameters.MAX_STEPS = +$iterationsInput.value;
+  parameters.DELAY = +$delayInput.value;
 
   start();
 }
 
 function start() {
-  const genetic = new GeneticManager(maze, parameters);
+  genetic.maze = maze;
+  genetic.parameters = parameters;
 
   let population = genetic.populate(
     parameters.POPULATION_SIZE,

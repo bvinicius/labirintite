@@ -1,3 +1,5 @@
+import geneticManager from "../managers/geneticManager";
+import mazeBuilder from "../managers/mazeBuilder";
 import directions from "./directions";
 import scores from "./scores";
 
@@ -17,13 +19,23 @@ class Cromossome {
     return this.validPath && this.reachesTarget;
   }
 
-  move() {
-    this.directionsSequence.forEach((direction) => {
-      this.walk(direction, this.maze);
+  async move() {
+    for (const direction of this.directionsSequence) {
+      await this.delay();
+      this.step(direction);
+    }
+  }
+
+  delay(time) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, time);
     });
   }
 
-  walk(eDirection) {
+  step(eDirection) {
+    console.log("RESOLVING");
     switch (eDirection) {
       case directions.UP:
         this.currentPosition[0]--;
@@ -45,6 +57,7 @@ class Cromossome {
 
     this.computeScores();
     this.path.push([...this.currentPosition]);
+    mazeBuilder.setAgentPosition(this.currentPosition);
     this.moved = true;
   }
 

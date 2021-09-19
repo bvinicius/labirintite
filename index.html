@@ -9,23 +9,40 @@
     <title>Labirintite</title>
   </head>
   <body>
+    <h1 class="title">Labirintite</h1>
+
     <div class="parameters-container">
-      <input
-        id="population-size"
-        class="parameter-input"
-        type="number"
-        placeholder="Tamanho da população"
-      />
-      <input
-        class="parameter-input"
-        id="iterations"
-        type="number"
-        placeholder="Iterações"
-      />
+      <div class="input-container">
+        <label for="population-size">Tamanho da população</label>
+        <input
+          name="population-size"
+          id="population-size"
+          class="parameter-input"
+          type="number"
+        />
+      </div>
+      <div class="input-container">
+        <label for="iterations">Iterações</label>
+        <input
+          name="iterations"
+          class="parameter-input"
+          id="iterations"
+          type="number"
+        />
+      </div>
+      <div class="input-container">
+        <label for="iterations">Delay (ms)</label>
+        <input
+          name="iterations"
+          class="parameter-input"
+          id="iterations"
+          type="number"
+        />
+      </div>
     </div>
-
-    <button id="startButton">EXECUTAR</button>
-
+    <div class="button-container">
+      <button id="startButton">EXECUTAR</button>
+    </div>
     <div class="maze-container"></div>
   </body>
 </html>
