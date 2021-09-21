@@ -1,33 +1,37 @@
-const fs = require('fs');
-const Genetic = require('./genetic');
+const fs = require("fs");
+const Genetic = require("./genetic");
 
-const strInput = fs.readFileSync('../maze.txt').toString();
+const strInput = fs.readFileSync("../maze.txt").toString();
 const freeSpotsAmount = (strInput.match(/0/g) || []).length;
 
 const parameters = {
-    POPULATION_SIZE: 40,
-    MAX_STEPS: freeSpotsAmount,
-    ITERATIONS: 10000
+  POPULATION_SIZE: 500,
+  MAX_STEPS: freeSpotsAmount,
+  ITERATIONS: 10000,
 };
 
-const maze = strInput
-    .split('\r\n')
-    .map((line) => line.split(' '));
+const maze = strInput.split("\r\n").map((line) => line.split(" "));
 
 const genetic = new Genetic(maze, parameters);
 
-let population = genetic.populate(parameters.POPULATION_SIZE, parameters.MAX_STEPS, maze);
+let population = genetic.populate(
+  parameters.POPULATION_SIZE,
+  parameters.MAX_STEPS,
+  maze
+);
 
 let iterationsCount = 0;
 while (iterationsCount < parameters.ITERATIONS) {
-    genetic.runPopulation(population);
-    const [mom, dad] = genetic.getBestParents(population);
-    population = genetic.generateNewPopulation(mom, dad);
-    console.log('best score in this round', genetic.getBestParents(population)[0].score);
-    iterationsCount++;
+  genetic.runPopulation(population);
+  const [mom, dad] = genetic.getBestParents(population);
+  population = genetic.generateNewPopulation(mom, dad);
+
+  const best = genetic.getBestParents(population)[0];
+  console.log(`best score: ${best.score};`);
+  iterationsCount++;
 }
 
-console.log('ok!');
+console.log("ok!");
 
 // PASSO 1: Definir uma matriz de X vetores com direções aleatórias (POPULAÇÃO) [OK]
 // PASSO 2: Fazer o cálculo da aptidão para cada individuo da população [OK]
