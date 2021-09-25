@@ -59,15 +59,18 @@ class Cromossome {
    * @param {*} position
    */
   computeScores() {
+    let stepScore = 0;
     Object.values(Scores).forEach((objScore) => {
       if (objScore.happened(this)) {
-        this.score += objScore.score;
-        this.scores.push(objScore.score);
+        stepScore += objScore.score;
         if (objScore.isPenalty) {
           this.validPath = false;
         }
       }
     });
+
+    this.score += stepScore;
+    this.scores.push(stepScore);
   }
 }
 
