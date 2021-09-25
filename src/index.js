@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { Z_BEST_SPEED } = require("zlib");
 const Genetic = require("./genetic");
 
 const strInput = fs.readFileSync("../maze.txt").toString();
@@ -27,6 +28,11 @@ while (iterationsCount < parameters.ITERATIONS) {
   population = genetic.generateNewPopulation(mom, dad);
 
   const best = genetic.getBestParents(population)[0];
+  if (best.score == 0) {
+    debugger;
+    console.log("CARAIOOOO FOIIIII");
+    break;
+  }
   console.log(`best score: ${best.score};`);
   iterationsCount++;
 }

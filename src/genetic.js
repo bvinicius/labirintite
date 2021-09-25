@@ -82,10 +82,15 @@ class Genetic {
   }
 
   getWorstDirectionsIndexes(child, quantity) {
+    // return child.scores
+    //   .map((score, index) => [score, index])
+    //   .sort((prev, curr) => curr[0] - prev[0])
+    //   .slice(0, quantity)
+    //   .map((args) => args[1]);
+
     return child.scores
       .map((score, index) => [score, index])
-      .sort((prev, curr) => curr[0] - prev[0])
-      .slice(0, quantity)
+      .filter((args) => args[0] > 1000)
       .map((args) => args[1]);
   }
 

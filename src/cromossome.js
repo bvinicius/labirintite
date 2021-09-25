@@ -14,7 +14,7 @@ class Cromossome {
     this.moved = false;
   }
 
-  get isSolution() {
+  isSolution() {
     return this.validPath && this.reachesTarget;
   }
 
@@ -51,7 +51,7 @@ class Cromossome {
 
   hasFinished() {
     const [line, column] = this.currentPosition;
-    return this.maze[(line, column)] === "S";
+    return this.maze[line] && this.maze[line][column] === "S";
   }
 
   /**
