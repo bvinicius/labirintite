@@ -7,6 +7,7 @@ class Cromossome {
     this.currentPosition = [0, 0];
     this.path = [[this.currentPosition[0], this.currentPosition[1]]];
     this.directions = directions;
+    this.scores = [];
     this.maze = maze;
     this.validPath = true;
     this.reachesTarget = false;
@@ -61,8 +62,8 @@ class Cromossome {
     Object.values(Scores).forEach((objScore) => {
       if (objScore.happened(this)) {
         this.score += objScore.score;
+        this.scores.push(objScore.score);
         if (objScore.isPenalty) {
-          // console.log('\n PENALTY! \n');
           this.validPath = false;
         }
       }

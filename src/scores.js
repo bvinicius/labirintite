@@ -1,16 +1,16 @@
 module.exports = Object.freeze({
   repeatedPosition: {
-    score: 500,
+    score: 100,
     happened: detectRepeatedPosition,
     isPenalty: true,
   },
   walkedIntoWall: {
-    score: 1000,
+    score: 2000,
     happened: detectIntoWall,
     isPenalty: true,
   },
   outOfMaze: {
-    score: 10000,
+    score: 30000,
     happened: detectOutOfMaze,
     isPenalty: true,
   },
@@ -27,7 +27,7 @@ function detectRepeatedPosition(cromossome) {
 
 function detectIntoWall(cromossome) {
   const [line, column] = cromossome.currentPosition;
-  return cromossome.maze[(line, column)] == "1";
+  return cromossome.maze[line] && cromossome.maze[line][column] == "1";
 }
 
 function detectOutOfMaze(cromossome) {
@@ -36,5 +36,5 @@ function detectOutOfMaze(cromossome) {
 
 function detectValidWalk(cromossome) {
   const [line, column] = cromossome.currentPosition;
-  return cromossome.maze[(line, column)] == "0";
+  return cromossome.maze[line] && cromossome.maze[line][column] == "0";
 }
