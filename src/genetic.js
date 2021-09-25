@@ -7,7 +7,7 @@ class Genetic {
     this.directionsPossibilities = Object.keys(Directions).length;
     this.maze = maze;
     this.parameters = parameters;
-    this.mutationRate = 0.3;
+    this.mutationRate = 0.7;
   }
 
   populate(quantity, steps) {
@@ -44,6 +44,7 @@ class Genetic {
     const mask = this.getBinaryMask(mom.directions.length);
     const children = this.uniformCrossOver(mom, dad, mask);
     this.mutate(children, this.mutationRate);
+    children.forEach((child) => (child.scores = []));
     population.push(...children);
     this.runPopulation(population);
 
@@ -59,10 +60,13 @@ class Genetic {
     const random = Math.random();
     const child = children[random > 0.5 ? 0 : 1];
 
-    const stepsToChange = Math.floor(child.directions.length * mutationRate);
-    const indexes = Array.from({ length: stepsToChange }, () =>
-      Math.floor(Math.random() * child.directions.length)
-    );
+    const stepsToChange = Math.round(child.directions.length * mutationRate);
+    // const indexes = Array.from({ length: stepsToChange }, () =>
+    //   Math.floor(Math.random() * child.directions.length)
+    // );
+
+    const mutationQuatity = Math.floor(child.directions.length * mutationRate);
+    const indexes = this.getWorstDirectionsIndexes(child, mutationQuatity);
 
     const numberOfDirections = Object.keys(directions).length;
     indexes.forEach((index) => {
@@ -75,6 +79,14 @@ class Genetic {
 
       child.directions[index] = randomDirection;
     });
+  }
+
+  getWorstDirectionsIndexes(child, quantity) {
+    return child.scores
+      .map((score, index) => [score, index])
+      .sort((prev, curr) => curr[0] - prev[0])
+      .slice(0, quantity)
+      .map((args) => args[1]);
   }
 
   getBinaryMask(length) {
@@ -122,6 +134,16 @@ class Genetic {
 
     const firstChild = new Cromossome(firstChildDirection, this.maze);
     const secondChild = new Cromossome(secondChildDirection, this.maze);
+
+    mask.forEach((value, index) => {
+      if (value === 1) {
+        firstChild.scores.push(mom.scores[index]);
+        secondChild.scores.push(dad.scores[index]);
+      } else {
+        firstChild.scores.push(dad.scores[index]);
+        secondChild.scores.push(mom.scores[index]);
+      }
+    });
 
     return [firstChild, secondChild];
   }

@@ -12,4 +12,9 @@ PONTUAÇÕES
 RESTRIÇÕES
     - A lista da solução pode ter um tamanho máximo igual ao número de caminhos livres (número de zeros).
 
-FUNÇÃO HEURISTICA
+
+
+CONSIDERAÇÕES: 
+
+- A mutação tem que ser bem alta no início. Uma ideia é em mudar TODOS os movimentos que fizeram bobagem crítica (sair do labirinto ou andar na parede), assim eles eventualmente vão evoluindo e a taxa de mutação se atoajusta. 
+- Se a ideia anterior não rolar, daria pra fazer uma taxa de mutação que diminui ao longo do tempo.

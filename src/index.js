@@ -5,9 +5,9 @@ const strInput = fs.readFileSync("../maze.txt").toString();
 const freeSpotsAmount = (strInput.match(/0/g) || []).length;
 
 const parameters = {
-  POPULATION_SIZE: 100,
+  POPULATION_SIZE: 500,
   MAX_STEPS: freeSpotsAmount,
-  ITERATIONS: 10000,
+  ITERATIONS: 1000,
 };
 
 const maze = strInput.split("\r\n").map((line) => line.split(" "));

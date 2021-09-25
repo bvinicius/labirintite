@@ -10,7 +10,7 @@ module.exports = Object.freeze({
     isPenalty: true,
   },
   outOfMaze: {
-    score: 30000,
+    score: 5000,
     happened: detectOutOfMaze,
     isPenalty: true,
   },
