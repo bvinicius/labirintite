@@ -14,9 +14,7 @@ class Genetic {
     return Array(quantity)
       .fill(null)
       .map(() => Array.from({ length: steps }, () => this.getRandomDirection()))
-      .map(
-        (directionsSequence) => new Cromossome(directionsSequence, this.maze)
-      );
+      .map((directions) => new Cromossome(directions, this.maze));
   }
 
   runPopulation(population) {
@@ -31,7 +29,7 @@ class Genetic {
 
   getBestParents(population) {
     const sorted = population.sort((prev, next) => {
-      return next.score - prev.score;
+      return prev.score - next.score;
     });
 
     const slicedSorted = sorted.slice(0, 2);
@@ -43,7 +41,7 @@ class Genetic {
   }
 
   recursivelyGenerateNewPopulation(mom, dad, population) {
-    const mask = this.getBinaryMask(mom.directionsSequence.length);
+    const mask = this.getBinaryMask(mom.directions.length);
     const children = this.uniformCrossOver(mom, dad, mask);
     this.mutate(children, this.mutationRate);
     population.push(...children);
@@ -61,23 +59,21 @@ class Genetic {
     const random = Math.random();
     const child = children[random > 0.5 ? 0 : 1];
 
-    const stepsToChange = Math.floor(
-      child.directionsSequence.length * mutationRate
-    );
+    const stepsToChange = Math.floor(child.directions.length * mutationRate);
     const indexes = Array.from({ length: stepsToChange }, () =>
-      Math.floor(Math.random() * child.directionsSequence.length)
+      Math.floor(Math.random() * child.directions.length)
     );
 
     const numberOfDirections = Object.keys(directions).length;
     indexes.forEach((index) => {
-      const oldDirection = child.directionsSequence[index];
+      const oldDirection = child.directions[index];
       let randomDirection;
 
       do {
         randomDirection = Math.floor(Math.random() * numberOfDirections);
       } while (oldDirection === randomDirection);
 
-      child.directionsSequence[index] = randomDirection;
+      child.directions[index] = randomDirection;
     });
   }
 
@@ -91,8 +87,8 @@ class Genetic {
    * @param {*} dad
    */
   uniPointCrossover(mom, dad) {
-    const momSequence = mom.directionsSequence;
-    const dadSequence = dad.directionsSequence;
+    const momSequence = mom.directions;
+    const dadSequence = dad.directions;
 
     const slicePoint = Math.floor(Math.random() * momSequence.length);
 
@@ -116,11 +112,11 @@ class Genetic {
 
     mask.forEach((value, index) => {
       if (value === 1) {
-        firstChildDirection.push(mom.directionsSequence[index]);
-        secondChildDirection.push(dad.directionsSequence[index]);
+        firstChildDirection.push(mom.directions[index]);
+        secondChildDirection.push(dad.directions[index]);
       } else {
-        firstChildDirection.push(dad.directionsSequence[index]);
-        secondChildDirection.push(mom.directionsSequence[index]);
+        firstChildDirection.push(dad.directions[index]);
+        secondChildDirection.push(mom.directions[index]);
       }
     });
 

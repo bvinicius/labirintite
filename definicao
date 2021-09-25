@@ -13,4 +13,3 @@ RESTRIÇÕES
     - A lista da solução pode ter um tamanho máximo igual ao número de caminhos livres (número de zeros).
 
 FUNÇÃO HEURISTICA
-    - O melhor modelo se dá pela maior pontuação geral do cromossomo.
