@@ -2,7 +2,7 @@ module.exports = Object.freeze({
   repeatedPosition: {
     score: 100,
     happened: detectRepeatedPosition,
-    isPenalty: true,
+    isPenalty: false,
   },
   walkedIntoWall: {
     score: 2000,
@@ -22,7 +22,7 @@ module.exports = Object.freeze({
 });
 
 function detectRepeatedPosition(cromossome) {
-  return cromossome.path.includes(cromossome.currentPosition);
+  return cromossome.path.some(e => e[0] == cromossome.currentPosition[0] && e[1] == cromossome.currentPosition[1])
 }
 
 function detectIntoWall(cromossome) {
