@@ -1,151 +1,141 @@
-const Cromossome = require("./cromossome");
-const directions = require("./directions");
-const Directions = require("./directions");
+// class Genetic {
+//   constructor(maze, parameters) {
+//     this.directionsPossibilities = Object.keys(Directions).length;
+//     this.maze = maze;
+//     this.parameters = parameters;
+//     this.mutationRate = 0.7;
+//   }
 
-class Genetic {
-  constructor(maze, parameters) {
-    this.directionsPossibilities = Object.keys(Directions).length;
-    this.maze = maze;
-    this.parameters = parameters;
-    this.mutationRate = 0.7;
-  }
+//   populate(quantity, steps) {
+//     return Array(quantity)
+//       .fill(null)
+//       .map(() => Array.from({ length: steps }, () => this.getRandomDirection()))
+//       .map((directions) => new Cromossome(directions, this.maze));
+//   }
 
-  populate(quantity, steps) {
-    return Array(quantity)
-      .fill(null)
-      .map(() => Array.from({ length: steps }, () => this.getRandomDirection()))
-      .map((directions) => new Cromossome(directions, this.maze));
-  }
+//   runPopulation(population) {
+//     population.forEach((cromossome) => {
+//       !cromossome.moved && cromossome.move();
+//     });
+//   }
 
-  runPopulation(population) {
-    population.forEach((cromossome) => {
-      !cromossome.moved && cromossome.move();
-    });
-  }
+//   getRandomDirection() {
+//     return Math.floor(Math.random() * this.directionsPossibilities);
+//   }
 
-  getRandomDirection() {
-    return Math.floor(Math.random() * this.directionsPossibilities);
-  }
+//   getBestParents(population) {
+//     const sorted = population.sort((prev, next) => {
+//       return prev.score - next.score;
+//     });
 
-  getBestParents(population) {
-    const sorted = population.sort((prev, next) => {
-      return prev.score - next.score;
-    });
+//     const slicedSorted = sorted.slice(0, 2);
+//     return slicedSorted;
+//   }
 
-    const slicedSorted = sorted.slice(0, 2);
-    return slicedSorted;
-  }
+//   generateNewPopulation(mom, dad) {
+//     return this.recursivelyGenerateNewPopulation(mom, dad, []);
+//   }
 
-  generateNewPopulation(mom, dad) {
-    return this.recursivelyGenerateNewPopulation(mom, dad, []);
-  }
+//   recursivelyGenerateNewPopulation(mom, dad, population) {
+//     const mask = this.getBinaryMask(mom.directions.length);
+//     const children = this.uniformCrossOver(mom, dad, mask);
+//     this.mutate(children, this.mutationRate);
+//     children.forEach((child) => (child.scores = []));
+//     population.push(...children);
+//     this.runPopulation(population);
 
-  recursivelyGenerateNewPopulation(mom, dad, population) {
-    const mask = this.getBinaryMask(mom.directions.length);
-    const children = this.uniformCrossOver(mom, dad, mask);
-    this.mutate(children, this.mutationRate);
-    children.forEach((child) => (child.scores = []));
-    population.push(...children);
-    this.runPopulation(population);
+//     if (population.length < this.parameters.POPULATION_SIZE) {
+//       const [newMom, newDad] = this.getBestParents(population);
+//       return this.recursivelyGenerateNewPopulation(newMom, newDad, population);
+//     }
 
-    if (population.length < this.parameters.POPULATION_SIZE) {
-      const [newMom, newDad] = this.getBestParents(population);
-      return this.recursivelyGenerateNewPopulation(newMom, newDad, population);
-    }
+//     return population;
+//   }
 
-    return population;
-  }
+//   mutate(children) {
+//     const random = Math.random();
+//     const child = children[random > 0.5 ? 0 : 1];
 
-  mutate(children, mutationRate) {
-    const random = Math.random();
-    const child = children[random > 0.5 ? 0 : 1];
+//     const indexes = this.getWorstDirectionsIndexes(child);
 
-    const stepsToChange = Math.round(child.directions.length * mutationRate);
-    // const indexes = Array.from({ length: stepsToChange }, () =>
-    //   Math.floor(Math.random() * child.directions.length)
-    // );
+//     const numberOfDirections = Object.keys(directions).length;
+//     indexes.forEach((index) => {
+//       const oldDirection = child.directions[index];
+//       let randomDirection;
 
-    const mutationQuatity = Math.floor(child.directions.length * mutationRate);
-    const indexes = this.getWorstDirectionsIndexes(child, mutationQuatity);
+//       do {
+//         randomDirection = Math.floor(Math.random() * numberOfDirections);
+//       } while (oldDirection === randomDirection);
 
-    const numberOfDirections = Object.keys(directions).length;
-    indexes.forEach((index) => {
-      const oldDirection = child.directions[index];
-      let randomDirection;
+//       child.directions[index] = randomDirection;
+//     });
+//   }
 
-      do {
-        randomDirection = Math.floor(Math.random() * numberOfDirections);
-      } while (oldDirection === randomDirection);
+//   getWorstDirectionsIndexes(child) {
+//     return child.scores
+//       .map((score, index) => [score, index])
+//       .filter((args) => args[0] > 0)
+//       .map((args) => args[1]);
+//   }
 
-      child.directions[index] = randomDirection;
-    });
-  }
+//   getBinaryMask(length) {
+//     return Array.from({ length }, () => (Math.random() > 0.5 ? 0 : 1));
+//   }
 
-  getWorstDirectionsIndexes(child, quantity) {
-    return child.scores
-      .map((score, index) => [score, index])
-      .filter((args) => args[0] > 0)
-      .map((args) => args[1]);
-  }
+//   /**
+//    * Crossover uniponto
+//    * @param {*} mom
+//    * @param {*} dad
+//    */
+//   uniPointCrossover(mom, dad) {
+//     const momSequence = mom.directions;
+//     const dadSequence = dad.directions;
 
-  getBinaryMask(length) {
-    return Array.from({ length }, () => (Math.random() > 0.5 ? 0 : 1));
-  }
+//     const slicePoint = Math.floor(Math.random() * momSequence.length);
 
-  /**
-   * Crossover uniponto
-   * @param {*} mom
-   * @param {*} dad
-   */
-  uniPointCrossover(mom, dad) {
-    const momSequence = mom.directions;
-    const dadSequence = dad.directions;
+//     const firstChildDirections = [
+//       ...momSequence.slice(0, slicePoint),
+//       ...dadSequence.slice(slicePoint),
+//     ];
+//     const secondChildDirections = [
+//       ...dadSequence.slice(0, slicePoint),
+//       ...momSequence.slice(slicePoint),
+//     ];
 
-    const slicePoint = Math.floor(Math.random() * momSequence.length);
+//     const firstChild = new Cromossome(firstChildDirections, this.maze);
+//     const secondChild = new Cromossome(secondChildDirections, this.maze);
+//     return [firstChild, secondChild];
+//   }
 
-    const firstChildDirections = [
-      ...momSequence.slice(0, slicePoint),
-      ...dadSequence.slice(slicePoint),
-    ];
-    const secondChildDirections = [
-      ...dadSequence.slice(0, slicePoint),
-      ...momSequence.slice(slicePoint),
-    ];
+//   uniformCrossOver(mom, dad, mask) {
+//     const firstChildDirection = [];
+//     const secondChildDirection = [];
 
-    const firstChild = new Cromossome(firstChildDirections, this.maze);
-    const secondChild = new Cromossome(secondChildDirections, this.maze);
-    return [firstChild, secondChild];
-  }
+//     mask.forEach((value, index) => {
+//       if (value === 1) {
+//         firstChildDirection.push(mom.directions[index]);
+//         secondChildDirection.push(dad.directions[index]);
+//       } else {
+//         firstChildDirection.push(dad.directions[index]);
+//         secondChildDirection.push(mom.directions[index]);
+//       }
+//     });
 
-  uniformCrossOver(mom, dad, mask) {
-    const firstChildDirection = [];
-    const secondChildDirection = [];
+//     const firstChild = new Cromossome(firstChildDirection, this.maze);
+//     const secondChild = new Cromossome(secondChildDirection, this.maze);
 
-    mask.forEach((value, index) => {
-      if (value === 1) {
-        firstChildDirection.push(mom.directions[index]);
-        secondChildDirection.push(dad.directions[index]);
-      } else {
-        firstChildDirection.push(dad.directions[index]);
-        secondChildDirection.push(mom.directions[index]);
-      }
-    });
+//     mask.forEach((value, index) => {
+//       if (value === 1) {
+//         firstChild.scores.push(mom.scores[index]);
+//         secondChild.scores.push(dad.scores[index]);
+//       } else {
+//         firstChild.scores.push(dad.scores[index]);
+//         secondChild.scores.push(mom.scores[index]);
+//       }
+//     });
 
-    const firstChild = new Cromossome(firstChildDirection, this.maze);
-    const secondChild = new Cromossome(secondChildDirection, this.maze);
+//     return [firstChild, secondChild];
+//   }
+// }
 
-    mask.forEach((value, index) => {
-      if (value === 1) {
-        firstChild.scores.push(mom.scores[index]);
-        secondChild.scores.push(dad.scores[index]);
-      } else {
-        firstChild.scores.push(dad.scores[index]);
-        secondChild.scores.push(mom.scores[index]);
-      }
-    });
-
-    return [firstChild, secondChild];
-  }
-}
-
-module.exports = Genetic;
+// module.exports = Genetic;

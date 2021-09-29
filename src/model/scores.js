@@ -1,33 +1,42 @@
 export default Object.freeze({
   repeatedPosition: {
-    score: -500,
+    score: 101,
     happened: detectRepeatedPosition,
-    isPenalty: true,
+    isPenalty: false,
   },
   walkedIntoWall: {
-    score: -1000,
+    score: 2002,
     happened: detectIntoWall,
     isPenalty: true,
   },
   outOfMaze: {
-    score: -10000,
+    score: 5003,
     happened: detectOutOfMaze,
     isPenalty: true,
   },
   validWalk: {
-    score: 10000,
+    score: 100,
     happened: detectValidWalk,
+    isPenalty: false,
+  },
+  foundDestiny: {
+    score: -1000,
+    happened: detectFoundDestiny,
     isPenalty: false,
   },
 });
 
 function detectRepeatedPosition(cromossome) {
-  return cromossome.path.includes(cromossome.currentPosition);
+  return cromossome.path.some(
+    (e) =>
+      e[0] == cromossome.currentPosition[0] &&
+      e[1] == cromossome.currentPosition[1]
+  );
 }
 
 function detectIntoWall(cromossome) {
   const [line, column] = cromossome.currentPosition;
-  return cromossome.maze[(line, column)] == "1";
+  return cromossome.maze[line] && cromossome.maze[line][column] == "1";
 }
 
 function detectOutOfMaze(cromossome) {
@@ -36,5 +45,10 @@ function detectOutOfMaze(cromossome) {
 
 function detectValidWalk(cromossome) {
   const [line, column] = cromossome.currentPosition;
-  return cromossome.maze[(line, column)] == "0";
+  return cromossome.maze[line] && cromossome.maze[line][column] == "0";
+}
+
+function detectFoundDestiny(cromossome) {
+  const [line, column] = cromossome.currentPosition;
+  return line == 11 && column == 11;
 }

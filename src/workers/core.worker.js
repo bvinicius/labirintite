@@ -15,17 +15,26 @@ function start(maze, parameters) {
     maze
   );
 
+  let best = null;
   let iterationsCount = 0;
-  while (iterationsCount < parameters.ITERATIONS) {
+
+  while (
+    iterationsCount < parameters.GENERATIONS &&
+    !(best && best.reachesTarget)
+  ) {
     geneticManager.runPopulation(population);
     const [mom, dad] = geneticManager.getBestParents(population);
     population = geneticManager.generateNewPopulation(mom, dad);
-    console.log(
-      "best score in this round",
-      geneticManager.getBestParents(population)[0].score
-    );
+
+    best = geneticManager.getBestParents(population)[0];
+    console.log(`best score: ${best.score}; found S: ${best.reachesTarget}`);
     iterationsCount++;
   }
 
-  self.postMessage({ message: "ready" });
+  if (best.reachesTarget) {
+    console.log(`\nsolution found!`);
+    console.log(`cromossome who found: ${JSON.stringify(best)}`);
+
+    self.postMessage({ message: "found", cromossome: best });
+  }
 }

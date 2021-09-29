@@ -1,41 +1,30 @@
-// import mazeBuilder from "../managers/mazeBuilder";
-import mazeBuilder from "../managers/mazeBuilder";
 import directions from "./directions";
 import scores from "./scores";
 
 class Cromossome {
-  constructor(directionsSequence, maze) {
+  constructor(directions, maze) {
     this.score = 0;
     this.currentPosition = [0, 0];
     this.path = [[this.currentPosition[0], this.currentPosition[1]]];
-    this.directionsSequence = directionsSequence;
+    this.directions = directions;
+    this.scores = [];
     this.maze = maze;
     this.validPath = true;
     this.reachesTarget = false;
     this.moved = false;
   }
 
-  get isSolution() {
+  isSolution() {
     return this.validPath && this.reachesTarget;
   }
 
-  async move() {
-    for (const direction of this.directionsSequence) {
-      await this.delay();
-      this.step(direction);
-    }
-  }
-
-  delay(time) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, time);
+  move() {
+    this.directions.forEach((direction) => {
+      this.walk(direction, this.maze);
     });
   }
 
-  step(eDirection) {
-    console.log("should take step");
+  walk(eDirection) {
     switch (eDirection) {
       case directions.UP:
         this.currentPosition[0]--;
@@ -51,19 +40,19 @@ class Cromossome {
         break;
     }
 
-    if (this.hasFinished()) {
-      this.reachesTarget = true;
-    }
-
     this.computeScores();
     this.path.push([...this.currentPosition]);
-    mazeBuilder.setAgentPosition(this.currentPosition);
     this.moved = true;
+
+    if (this.hasFinished()) {
+      this.reachesTarget = true;
+      return;
+    }
   }
 
   hasFinished() {
     const [line, column] = this.currentPosition;
-    return this.maze[(line, column)] === "S";
+    return line == 11 && column == 11;
   }
 
   /**
@@ -71,14 +60,18 @@ class Cromossome {
    * @param {*} position
    */
   computeScores() {
+    let stepScore = 0;
     Object.values(scores).forEach((objScore) => {
       if (objScore.happened(this)) {
-        this.score += objScore.score;
+        stepScore += objScore.score;
         if (objScore.isPenalty) {
           this.validPath = false;
         }
       }
     });
+
+    this.score += stepScore;
+    this.scores.push(stepScore);
   }
 }
 

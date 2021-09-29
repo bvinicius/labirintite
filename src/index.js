@@ -1,5 +1,4 @@
 import mazeBuilder from "./managers/mazeBuilder";
-import genetic from "./genetic";
 
 const strInput = `E 0 0 0 0 0 0 0 0 0 0 0\n1 1 1 1 0 0 0 0 0 1 1 1\n1 0 0 0 0 1 1 1 0 1 1 0\n1 0 1 1 1 1 1 1 0 0 0 0\n0 0 0 1 0 0 0 0 1 0 1 1\n1 1 0 0 0 1 0 1 0 0 1 1\n1 1 1 0 1 1 0 0 0 1 1 0\n0 0 1 0 0 1 0 1 0 1 1 0\n0 0 0 0 1 1 0 0 0 1 1 0\n1 1 1 0 1 0 0 1 1 1 1 0\n1 1 1 0 1 0 0 0 0 1 1 1\n1 1 1 0 0 0 0 1 0 0 0 S`;
 const freeSpotsAmount = (strInput.match(/0/g) || []).length;
@@ -7,7 +6,7 @@ const freeSpotsAmount = (strInput.match(/0/g) || []).length;
 const parameters = {
   POPULATION_SIZE: 100,
   MAX_STEPS: freeSpotsAmount,
-  GENERATIONS: 10,
+  GENERATIONS: 10000,
   DELAY: 1000,
 };
 
@@ -41,42 +40,13 @@ function onStartButtonClick() {
 }
 
 function start() {
-  genetic.maze = maze;
-  genetic.parameters = parameters;
-
-  let population = genetic.populate(
-    parameters.POPULATION_SIZE,
-    parameters.MAX_STEPS,
-    maze
-  );
-
-  let best = null;
-  let iterationsCount = 0;
-
-  while (
-    iterationsCount < parameters.GENERATIONS &&
-    !(best && best.reachesTarget)
-  ) {
-    genetic.runPopulation(population);
-    const [mom, dad] = genetic.getBestParents(population);
-    population = genetic.generateNewPopulation(mom, dad);
-
-    best = genetic.getBestParents(population)[0];
-    console.log(`best score: ${best.score}; found S: ${best.reachesTarget}`);
-    iterationsCount++;
-  }
-
-  if (best.reachesTarget) {
-    console.log(`\nsolution found!`);
-    console.log(`cromossome who found: ${JSON.stringify(best)}`);
-  }
-
   worker.postMessage({ maze, parameters });
   disableButton();
   worker.onmessage = onFinishRunning;
 }
 
-function onFinishRunning() {
+function onFinishRunning(data) {
+  console.log(`data: ${data}`);
   const $btn = document.querySelector("#startButton");
   $btn.disabled = false;
   $btn.classList.remove("disabled");
