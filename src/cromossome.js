@@ -40,18 +40,19 @@ class Cromossome {
         break;
     }
 
-    if (this.hasFinished()) {
-      this.reachesTarget = true;
-    }
-
     this.computeScores();
     this.path.push([...this.currentPosition]);
     this.moved = true;
+
+    if (this.hasFinished()) {
+      this.reachesTarget = true;
+      return;
+    }
   }
 
   hasFinished() {
     const [line, column] = this.currentPosition;
-    return this.maze[line] && this.maze[line][column] === "S";
+    return line == 11 && column == 11;
   }
 
   /**

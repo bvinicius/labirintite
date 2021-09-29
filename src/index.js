@@ -1,14 +1,13 @@
 const fs = require("fs");
-const { Z_BEST_SPEED } = require("zlib");
 const Genetic = require("./genetic");
 
 const strInput = fs.readFileSync("../maze.txt").toString();
 const freeSpotsAmount = (strInput.match(/0/g) || []).length;
 
 const parameters = {
-  POPULATION_SIZE: 500,
+  POPULATION_SIZE: 100,
   MAX_STEPS: freeSpotsAmount,
-  ITERATIONS: 1000,
+  ITERATIONS: 10000,
 };
 
 const maze = strInput.split("\r\n").map((line) => line.split(" "));
@@ -20,24 +19,23 @@ let population = genetic.populate(
   parameters.MAX_STEPS,
   maze
 );
-
+let best = null;
 let iterationsCount = 0;
-while (iterationsCount < parameters.ITERATIONS) {
+while (iterationsCount < parameters.ITERATIONS && !(best && best.reachesTarget)) {
   genetic.runPopulation(population);
   const [mom, dad] = genetic.getBestParents(population);
   population = genetic.generateNewPopulation(mom, dad);
 
-  const best = genetic.getBestParents(population)[0];
-  if (best.score == 0) {
-    debugger;
-    console.log("CARAIOOOO FOIIIII");
-    break;
-  }
-  console.log(`best score: ${best.score};`);
+  best = genetic.getBestParents(population)[0];
+  console.log(`best score: ${best.score}; found S: ${best.reachesTarget}`);
   iterationsCount++;
 }
 
-console.log("ok!");
+
+if (best.reachesTarget) {
+  console.log(`\nsolution found!`);
+  console.log(`cromossome who found: ${JSON.stringify(best)}`);
+}
 
 // PASSO 1: Definir uma matriz de X vetores com direções aleatórias (POPULAÇÃO) [OK]
 // PASSO 2: Fazer o cálculo da aptidão para cada individuo da população [OK]

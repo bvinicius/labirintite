@@ -19,3 +19,4 @@ CONSIDERAÇÕES:
 - A mutação tem que ser bem alta no início. Uma ideia é em mudar TODOS os movimentos que fizeram bobagem crítica (sair do labirinto ou andar na parede), assim eles eventualmente vão evoluindo e a taxa de mutação se atoajusta. 
 - Se a ideia anterior não rolar, daria pra fazer uma taxa de mutação que diminui ao longo do tempo.
 - Um problema encontrado: Se o agente chegar no S passando por caminhos repetitos, é uma solução, mas o score não é 0. Isso pode ser um problema porque a função da solução deveria ter um score fixo, escabelecido.
+- Encontrar o S deveria ser uma pontuação
