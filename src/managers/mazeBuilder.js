@@ -39,15 +39,25 @@ class MazeBuilder {
     });
   }
 
-  setAgentPosition([row, column]) {
-    console.log("setAngentPosition");
+  async go(path, delay = 250) {
+    for (let step of path) {
+      await this._setAgentPosition(step[0], step[1], delay);
+    }
+  }
+
+  _setAgentPosition(row, column, delay) {
     const $row = this.$rootElement.children[row];
     if (!$row) {
-      return;
+      return Promise.resolve();
     }
 
-    const $point = $row.children[column];
-    $point && $point.appendChild(this.$agent);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const $point = $row.children[column];
+        $point && $point.appendChild(this.$agent);
+        resolve();
+      }, delay);
+    });
   }
 }
 

@@ -17,6 +17,7 @@ body {
 .point {
   height: 30px;
   width: 30px;
+  vertical-align: middle;
 }
 
 .wall {
@@ -37,7 +38,7 @@ body {
 
 .maze-container {
   width: fit-content;
-  margin: 40px auto 0 auto;
+  margin: 40px auto;
   border: 1px solid #242535;
 }
 
@@ -82,10 +83,12 @@ button.disabled #loader {
 }
 
 .agent {
-  border-radius: 50%;
-  background-color: red;
-  width: 10px;
-  height: 10px;
+  /* border-radius: 50%;a*/
+  background-color: yellow;
+  width: 60%;
+  height: 60%;
+  border-radius: 3px;
+  margin: auto;
 }
 
 .loader-container {

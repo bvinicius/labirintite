@@ -45,11 +45,15 @@ function start() {
   worker.onmessage = onFinishRunning;
 }
 
-function onFinishRunning(data) {
+function onFinishRunning({ data }) {
   console.log(`data: ${data}`);
+
   const $btn = document.querySelector("#startButton");
   $btn.disabled = false;
   $btn.classList.remove("disabled");
+
+  alert("solution found!");
+  mazeBuilder.go(data.path);
 }
 
 function disableButton() {

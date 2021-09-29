@@ -1,26 +1,26 @@
 export default Object.freeze({
   repeatedPosition: {
-    score: 101,
+    score: 1001,
     happened: detectRepeatedPosition,
-    isPenalty: false,
+    isPenalty: true,
   },
   walkedIntoWall: {
-    score: 2002,
+    score: 1002,
     happened: detectIntoWall,
     isPenalty: true,
   },
   outOfMaze: {
-    score: 5003,
+    score: 2003,
     happened: detectOutOfMaze,
     isPenalty: true,
   },
   validWalk: {
-    score: 100,
+    score: 1000,
     happened: detectValidWalk,
     isPenalty: false,
   },
   foundDestiny: {
-    score: -1000,
+    score: -10000,
     happened: detectFoundDestiny,
     isPenalty: false,
   },
