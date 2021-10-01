@@ -16,12 +16,11 @@ window.onload = () => {
   mazeBuilder.build(maze, document.querySelector(".maze-container"));
 
   const $runButton = document.querySelector("#startButton");
-  const [$populationInput, $iterationsInput, $delayInput] =
+  const [$populationInput, $iterationsInput] =
     document.querySelectorAll("input.parameter-input");
 
   $populationInput.value = parameters.POPULATION_SIZE;
   $iterationsInput.value = parameters.GENERATIONS;
-  $delayInput.value = parameters.DELAY;
 
   $runButton.addEventListener("click", onStartButtonClick);
 };
@@ -29,12 +28,11 @@ window.onload = () => {
 const worker = new Worker(new URL("./workers/core.worker.js", import.meta.url));
 
 function onStartButtonClick() {
-  const [$populationInput, $iterationsInput, $delayInput] =
+  const [$populationInput, $iterationsInput] =
     document.querySelectorAll("input.parameter-input");
 
   parameters.POPULATION_SIZE = +$populationInput.value;
   parameters.GENERATIONS = +$iterationsInput.value;
-  parameters.DELAY = +$delayInput.value;
 
   start();
 }
