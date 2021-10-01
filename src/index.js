@@ -27,7 +27,7 @@ while (iterationsCount < parameters.ITERATIONS && !(best && best.reachesTarget))
   population = genetic.generateNewPopulation(mom, dad);
 
   best = genetic.getBestParents(population)[0];
-  console.log(`best score: ${best.score}; found S: ${best.reachesTarget}`);
+  console.log(`best score: ${best.score}; found S: ${best.reachesTarget}; valid: ${best.isSolution()}`);
   iterationsCount++;
 }
 

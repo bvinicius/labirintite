@@ -56,17 +56,11 @@ class Genetic {
     return population;
   }
 
-  mutate(children, mutationRate) {
+  mutate(children) {
     const random = Math.random();
     const child = children[random > 0.5 ? 0 : 1];
 
-    const stepsToChange = Math.round(child.directions.length * mutationRate);
-    // const indexes = Array.from({ length: stepsToChange }, () =>
-    //   Math.floor(Math.random() * child.directions.length)
-    // );
-
-    const mutationQuatity = Math.floor(child.directions.length * mutationRate);
-    const indexes = this.getWorstDirectionsIndexes(child, mutationQuatity);
+    const indexes = this.getWorstDirectionsIndexes(child);
 
     const numberOfDirections = Object.keys(directions).length;
     indexes.forEach((index) => {
@@ -81,7 +75,7 @@ class Genetic {
     });
   }
 
-  getWorstDirectionsIndexes(child, quantity) {
+  getWorstDirectionsIndexes(child) {
     return child.scores
       .map((score, index) => [score, index])
       .filter((args) => args[0] > 0)
