@@ -8,6 +8,7 @@ class Genetic {
     this.maze = maze;
     this.parameters = parameters;
     this.mutationRate = 0.7;
+    this.nextDirection = 0;
   }
 
   populate(quantity, steps) {
@@ -41,8 +42,13 @@ class Genetic {
   }
 
   recursivelyGenerateNewPopulation(mom, dad, population) {
-    const mask = this.getBinaryMask(mom.directions.length);
-    const children = this.uniformCrossOver(mom, dad, mask);
+    // console.log(`mom: ${mom.directions}`);
+    // console.log(`dad: ${dad.directions}`);
+    // const mask = this.getBinaryMask(mom.directions.length);
+
+    // console.log(`bin: ${mask}`);
+    const children = this.uniPointCrossover(mom, dad);
+    // const children = this.uniformCrossOver(mom, dad, mask);
     this.mutate(children, this.mutationRate);
     children.forEach((child) => (child.scores = []));
     population.push(...children);
@@ -60,26 +66,34 @@ class Genetic {
     const random = Math.random();
     const child = children[random > 0.5 ? 0 : 1];
 
-    const indexes = this.getWorstDirectionsIndexes(child);
+    const indexes = [this.getWorstDirectionsIndexes(child)];
 
     const numberOfDirections = Object.keys(directions).length;
     indexes.forEach((index) => {
-      const oldDirection = child.directions[index];
+      // const oldDirection = child.directions[index];
       let randomDirection;
 
-      do {
-        randomDirection = Math.floor(Math.random() * numberOfDirections);
-      } while (oldDirection === randomDirection);
+      randomDirection = this.nextDirection;
 
       child.directions[index] = randomDirection;
+      console.log(`tried direction ${randomDirection} for position ${index}`);
     });
+
+    this.nextDirection = (this.nextDirection + 1) % numberOfDirections;
   }
 
   getWorstDirectionsIndexes(child) {
     return child.scores
       .map((score, index) => [score, index])
-      .filter((args) => args[0] > 0)
-      .map((args) => args[1]);
+      .filter((args) => args[0] > 101)
+      .map((args) => args[1])[0];
+
+    // for (let i = 0; i < child.scores.length; i++) {
+    //   const score = child.scores[i];
+    //   if (score > 0) {
+    //     return i;
+    //   }
+    // }
   }
 
   getBinaryMask(length) {
@@ -95,7 +109,8 @@ class Genetic {
     const momSequence = mom.directions;
     const dadSequence = dad.directions;
 
-    const slicePoint = Math.floor(Math.random() * momSequence.length);
+    // const slicePoint = Math.floor(Math.random() * momSequence.length); //deixar isso mais variável.
+    const slicePoint = Math.floor(momSequence.length / 2);
 
     const firstChildDirections = [
       ...momSequence.slice(0, slicePoint),
@@ -108,6 +123,17 @@ class Genetic {
 
     const firstChild = new Cromossome(firstChildDirections, this.maze);
     const secondChild = new Cromossome(secondChildDirections, this.maze);
+
+    firstChildDirections.forEach((direction, index) => {
+      if (index < slicePoint) {
+        firstChild.scores.push(mom.scores[index]);
+        secondChild.scores.push(dad.scores[index]);
+      } else {
+        firstChild.scores.push(dad.scores[index]);
+        secondChild.scores.push(mom.scores[index]);
+      }
+    });
+
     return [firstChild, secondChild];
   }
 

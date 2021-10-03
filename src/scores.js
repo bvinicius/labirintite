@@ -15,19 +15,19 @@ module.exports = Object.freeze({
     isPenalty: true,
   },
   validWalk: {
-    score: 100,
+    score: -1000,
     happened: detectValidWalk,
     isPenalty: false,
   },
   foundDestiny: {
-    score: -1000,
+    score: -10000,
     happened: detectFoundDestiny,
     isPenalty: false
   }
 });
 
 function detectRepeatedPosition(cromossome) {
-  return cromossome.path.some(e => e[0] == cromossome.currentPosition[0] && e[1] == cromossome.currentPosition[1])
+  return cromossome.path.some(e => e[0] == cromossome.currentPosition[0] && e[1] == cromossome.currentPosition[1]);
 }
 
 function detectIntoWall(cromossome) {

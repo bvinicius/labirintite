@@ -1,17 +1,16 @@
 const fs = require("fs");
 const Genetic = require("./genetic");
 
-const strInput = fs.readFileSync("../maze.txt").toString();
+const strInput = fs.readFileSync("../maze.txt").toString().trim();
 const freeSpotsAmount = (strInput.match(/0/g) || []).length;
 
 const parameters = {
   POPULATION_SIZE: 100,
   MAX_STEPS: freeSpotsAmount,
-  ITERATIONS: 10000,
+  ITERATIONS: 50000,
 };
 
-const maze = strInput.split("\r\n").map((line) => line.split(" "));
-
+const maze = strInput.split("\n").map((line) => line.split(" "));
 const genetic = new Genetic(maze, parameters);
 
 let population = genetic.populate(
@@ -21,16 +20,15 @@ let population = genetic.populate(
 );
 let best = null;
 let iterationsCount = 0;
-while (iterationsCount < parameters.ITERATIONS && !(best && best.reachesTarget)) {
+while (iterationsCount < parameters.ITERATIONS && !(best && best.isSolution())) {
   genetic.runPopulation(population);
   const [mom, dad] = genetic.getBestParents(population);
   population = genetic.generateNewPopulation(mom, dad);
 
   best = genetic.getBestParents(population)[0];
-  console.log(`best score: ${best.score}; found S: ${best.reachesTarget}; valid: ${best.isSolution()}`);
+  console.log(`ic: ${iterationsCount}; best score: ${best.score}; found S: ${best.reachesTarget}; valid: ${best.isSolution()}`);
   iterationsCount++;
 }
-
 
 if (best.reachesTarget) {
   console.log(`\nsolution found!`);

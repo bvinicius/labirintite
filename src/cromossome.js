@@ -64,9 +64,7 @@ class Cromossome {
     Object.values(Scores).forEach((objScore) => {
       if (objScore.happened(this)) {
         stepScore += objScore.score;
-        if (objScore.isPenalty) {
-          this.validPath = false;
-        }
+        this.validPath = this.validPath && !objScore.isPenalty;
       }
     });
 
