@@ -17,6 +17,9 @@ function start(maze, parameters) {
 
   let best = null;
   let iterationsCount = 0;
+  let found = 0;
+  let valid = 0;
+  let run = 0;
 
   while (
     iterationsCount < parameters.GENERATIONS &&
@@ -26,17 +29,37 @@ function start(maze, parameters) {
     const [mom, dad] = geneticManager.getBestParents(population);
     population = geneticManager.generateNewPopulation(mom, dad);
 
-    best = geneticManager.getBestParents(population)[0];
-    console.log(`ic ${iterationsCount} best score: ${best.score}; found S: ${best.reachesTarget}; valid: ${best.isSolution()}, path: ${JSON.stringify(best.path)}`);
+    best = mom;
+    console.log(
+      `ic ${iterationsCount} best score: ${best.score}; found S: ${
+        best.reachesTarget
+      }; valid: ${best.isSolution()}, path: ${JSON.stringify(best.path)}`
+    );
+
+    population.forEach((cromossome) => {
+      if (cromossome.reachesTarget) {
+        found++;
+      }
+    });
+    run += population.length;
+
     iterationsCount++;
   }
 
-  if (best.reachesTarget) {
+  if (best.isSolution()) {
+    valid++;
     console.log(`\nsolution found!`);
     console.log(`cromossome who found: ${JSON.stringify(best)}`);
-
-    self.postMessage(best);
   } else {
-    console.log('didnt find solution.');
+    console.log("didnt find solution.");
   }
+
+  const data = {
+    best,
+    found,
+    valid,
+    run,
+  };
+
+  self.postMessage(data);
 }

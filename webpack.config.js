@@ -1,16 +1,15 @@
 /* eslint-disable no-undef */
 const path = require("path");
-const handler = require('serve-handler');
-const http = require('http');
+const handler = require("serve-handler");
+const http = require("http");
 
 module.exports = () => {
-
   const server = http.createServer((request, response) => {
     return handler(request, response);
   });
 
-  server.listen(3000, () => {
-    console.log('Running at http://localhost:3000');
+  server.listen(5000, () => {
+    console.log("Running at http://localhost:5000");
   });
 
   return {

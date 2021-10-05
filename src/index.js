@@ -10,6 +10,7 @@ const parameters = {
   DELAY: 1000,
 };
 
+let lastCromossome = null;
 const maze = strInput.split("\n").map((line) => line.split(" "));
 
 window.onload = () => {
@@ -17,26 +18,32 @@ window.onload = () => {
 
   const $runButton = document.querySelector("#startButton");
   const $simulationButton = document.querySelector("#runButton");
-  const [$populationInput, $iterationsInput] =
+  const [$populationInput, $cromossomeInput, $iterationsInput] =
     document.querySelectorAll("input.parameter-input");
 
   $populationInput.value = parameters.POPULATION_SIZE;
+  $cromossomeInput.value = parameters.MAX_STEPS;
   $iterationsInput.value = parameters.GENERATIONS;
 
   $runButton.addEventListener("click", onStartButtonClick);
-  $simulationButton.addEventListener("click", () => {
-    const $pathInput = document.querySelector('#path-input');
-    onFinishRunning({ data: JSON.parse($pathInput.value) });
-  });
+  $simulationButton &&
+    $simulationButton.addEventListener("click", () => {
+      const $pathInput = document.querySelector("#path-input");
+      onFinishRunning({ data: JSON.parse($pathInput.value) });
+    });
+
+  const $repeatButton = document.querySelector("#repeatButton");
+  $repeatButton.addEventListener("click", onRepeatClick);
 };
 
 const worker = new Worker(new URL("./workers/core.worker.js", import.meta.url));
 
 function onStartButtonClick() {
-  const [$populationInput, $iterationsInput] =
+  const [$populationInput, $cromossomeInput, $iterationsInput] =
     document.querySelectorAll("input.parameter-input");
 
   parameters.POPULATION_SIZE = +$populationInput.value;
+  parameters.MAX_STEPS = +$cromossomeInput.value;
   parameters.GENERATIONS = +$iterationsInput.value;
 
   start();
@@ -49,14 +56,20 @@ function start() {
 }
 
 function onFinishRunning({ data }) {
-  console.log(`data: ${data}`);
+  const { best, found, run, valid } = data;
+  lastCromossome = best;
 
   const $btn = document.querySelector("#startButton");
   $btn.disabled = false;
   $btn.classList.remove("disabled");
 
-  alert("solution found!");
-  mazeBuilder.go(data);
+  const [$runField, $foundField, $validField] =
+    document.querySelectorAll(".result");
+  $runField.innerHTML = `<b>Nº de cromossomos testados:</b> ${run}`;
+  $foundField.innerHTML = `<b>Nº de cromossomos que encontram o caminho:</b> ${found}`;
+  $validField.innerHTML = `<b>Nº de cromossomos válidos:</b> ${valid}`;
+
+  mazeBuilder.go(best.path);
 }
 
 function disableButton() {
@@ -66,6 +79,12 @@ function disableButton() {
 
   const $loader = document.querySelector("#loader");
   $loader.classList.add("loader");
+}
+
+function onRepeatClick() {
+  if (lastCromossome && lastCromossome.path) {
+    mazeBuilder.go(lastCromossome.path);
+  }
 }
 
 // PASSO 1: Definir uma matriz de X vetores com direções aleatórias (POPULAÇÃO) [OK]
