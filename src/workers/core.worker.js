@@ -27,7 +27,7 @@ function start(maze, parameters) {
     population = geneticManager.generateNewPopulation(mom, dad);
 
     best = geneticManager.getBestParents(population)[0];
-    console.log(`ic ${iterationsCount} best score: ${best.score}; found S: ${best.reachesTarget}; valid: ${best.isSolution()}`);
+    console.log(`ic ${iterationsCount} best score: ${best.score}; found S: ${best.reachesTarget}; valid: ${best.isSolution()}, path: ${JSON.stringify(best.path)}`);
     iterationsCount++;
   }
 

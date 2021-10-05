@@ -31,9 +31,26 @@
         />
       </div>
     </div>
+    <div class="input-container">
+      <label for="path-input">Caminho do agente</label>
+      <input
+      style="width: 90%;"
+        name="path-input"
+        id="path-input"
+        class="parameter-input"
+        type="text"
+      />
+    </div>
     <div class="button-container">
       <button id="startButton">
-        <span>EXECUTAR</span>
+        <span>PROCURAR</span>
+        <div id="loader" class="loader"></div>
+      </button>
+    </div>
+
+    <div class="button-container">
+      <button id="runButton">
+        <span>SIMULAR CAMINHO</span>
         <div id="loader" class="loader"></div>
       </button>
     </div>

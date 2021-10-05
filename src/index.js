@@ -16,6 +16,7 @@ window.onload = () => {
   mazeBuilder.build(maze, document.querySelector(".maze-container"));
 
   const $runButton = document.querySelector("#startButton");
+  const $simulationButton = document.querySelector("#runButton");
   const [$populationInput, $iterationsInput] =
     document.querySelectorAll("input.parameter-input");
 
@@ -23,6 +24,10 @@ window.onload = () => {
   $iterationsInput.value = parameters.GENERATIONS;
 
   $runButton.addEventListener("click", onStartButtonClick);
+  $simulationButton.addEventListener("click", () => {
+    const $pathInput = document.querySelector('#path-input');
+    onFinishRunning({ data: JSON.parse($pathInput.value) });
+  });
 };
 
 const worker = new Worker(new URL("./workers/core.worker.js", import.meta.url));
@@ -51,7 +56,7 @@ function onFinishRunning({ data }) {
   $btn.classList.remove("disabled");
 
   alert("solution found!");
-  mazeBuilder.go(data.path);
+  mazeBuilder.go(data);
 }
 
 function disableButton() {
