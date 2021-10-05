@@ -57,9 +57,11 @@ body {
 .button-container {
   margin: 0 auto;
   width: fit-content;
+  display: flex;
+  flex-direction: column;
 }
 
-#startButton {
+.push-button {
   appearance: none;
   width: 120px;
   height: 40px;
@@ -68,6 +70,7 @@ body {
   border-radius: 30px;
   font-weight: bold;
   cursor: pointer;
+  margin-bottom: 24px;
 }
 
 button.disabled {
@@ -110,6 +113,12 @@ button.disabled #loader {
 
 #loader.active {
   display: block;
+}
+
+.results-container {
+  margin: 0 auto;
+  width: fit-content;
+  margin-bottom: 24px;
 }
 
 @keyframes spin {

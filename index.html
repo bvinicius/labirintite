@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="text/javascript" src="dist/main.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
     <link rel="stylesheet" href="src/styles/style.css" />
     <title>Labirintite</title>
   </head>
@@ -22,6 +22,15 @@
         />
       </div>
       <div class="input-container">
+        <label for="cromossome-size">Tamanho do cromossomo</label>
+        <input
+          name="cromossome-size"
+          id="cromossome-size"
+          class="parameter-input"
+          type="number"
+        />
+      </div>
+      <div class="input-container">
         <label for="iterations">Nº Gerações</label>
         <input
           name="iterations"
@@ -31,29 +40,38 @@
         />
       </div>
     </div>
-    <div class="input-container">
+    <!-- <div class="input-container">
       <label for="path-input">Caminho do agente</label>
       <input
-      style="width: 90%;"
+        style="width: 90%"
         name="path-input"
         id="path-input"
         class="parameter-input"
         type="text"
       />
-    </div>
-    <div class="button-container">
-      <button id="startButton">
-        <span>PROCURAR</span>
-        <div id="loader" class="loader"></div>
-      </button>
+    </div> -->
+
+    <div class="results-container">
+      <div class="result result-run"></div>
+      <div class="result result-found"></div>
+      <div class="result result-valid"></div>
     </div>
 
     <div class="button-container">
-      <button id="runButton">
+      <button id="startButton" class="push-button">
+        <span>PROCURAR</span>
+        <div id="loader" class="loader"></div>
+      </button>
+
+      <button id="repeatButton" class="push-button">REPETIR ANIMAÇÃO</button>
+    </div>
+
+    <!-- <div class="button-container">
+      <button id="runButton" class="push-button">
         <span>SIMULAR CAMINHO</span>
         <div id="loader" class="loader"></div>
       </button>
-    </div>
+    </div> -->
 
     <div class="maze-container"></div>
   </body>

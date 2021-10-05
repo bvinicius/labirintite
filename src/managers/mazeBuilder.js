@@ -40,6 +40,7 @@ class MazeBuilder {
   }
 
   async go(path, delay = 250) {
+    this.$agent.remove();
     for (let step of path) {
       await this._setAgentPosition(step[0], step[1], delay);
     }
