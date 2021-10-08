@@ -15,7 +15,7 @@ export default Object.freeze({
     isPenalty: true,
   },
   validWalk: {
-    score: -1000,
+    score: 0,
     happened: detectValidWalk,
     isPenalty: false,
   },

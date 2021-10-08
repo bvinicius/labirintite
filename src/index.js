@@ -86,12 +86,3 @@ function onRepeatClick() {
     mazeBuilder.go(lastCromossome.path);
   }
 }
-
-// PASSO 1: Definir uma matriz de X vetores com direções aleatórias (POPULAÇÃO) [OK]
-// PASSO 2: Fazer o cálculo da aptidão para cada individuo da população [OK]
-// PASSO 3: Se não encontrar solução, selecionar pais para a próxima etapa (com elitismo ou torneio)
-// PASSO 4: Cruzamento dos pais (tem vários tipos, definir.)
-
-// PASSO 5: Aplicar mutação nos filhos gerados
-
-// repetir a partir do passo 2
