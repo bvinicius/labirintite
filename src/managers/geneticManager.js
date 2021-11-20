@@ -12,13 +12,22 @@ class GeneticManager {
   populate(quantity, steps) {
     return Array(quantity)
       .fill(null)
-      .map(() => Array.from({ length: steps }, () => this.getRandomDirection()))
-      .map((directions) => new Cromossome(directions, this.maze));
+      .map(() => Array.from({ length: steps }, () => this.getRandomWeight()))
+      .map((weights) => new Cromossome(weights, this.maze));
+  }
+
+  /**
+   * Gera um double aleatório entre -1 e 1.
+   * @returns {number}
+   */
+  getRandomWeight() {
+    const signalModifier = Math.random() > 0.5 ? 1 : -1;
+    return Math.random() * signalModifier;
   }
 
   runPopulation(population) {
     population.forEach((cromossome) => {
-      !cromossome.moved && cromossome.move();
+      cromossome.move();
     });
   }
 
@@ -40,7 +49,7 @@ class GeneticManager {
   }
 
   recursivelyGenerateNewPopulation(mom, dad, population) {
-    const mask = this.getBinaryMask(mom.directions.length);
+    const mask = this.getBinaryMask(mom.weights.length);
     const children = this.uniformCrossOver(mom, dad, mask);
     this.mutate(children, this.mutationRate);
     children.forEach((child) => (child.scores = []));
@@ -116,11 +125,11 @@ class GeneticManager {
 
     mask.forEach((value, index) => {
       if (value === 1) {
-        firstChildDirection.push(mom.directions[index]);
-        secondChildDirection.push(dad.directions[index]);
+        firstChildDirection.push(mom.weights[index]);
+        secondChildDirection.push(dad.weights[index]);
       } else {
-        firstChildDirection.push(dad.directions[index]);
-        secondChildDirection.push(mom.directions[index]);
+        firstChildDirection.push(dad.weights[index]);
+        secondChildDirection.push(mom.weights[index]);
       }
     });
 

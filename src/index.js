@@ -8,6 +8,8 @@ const parameters = {
   MAX_STEPS: freeSpotsAmount,
   GENERATIONS: 10000,
   DELAY: 1000,
+  INPUT_NEURONS: 4,
+  OUTPUT_NEURONS: 4,
 };
 
 let lastCromossome = null;

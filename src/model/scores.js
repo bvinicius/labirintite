@@ -1,28 +1,33 @@
 export default Object.freeze({
   repeatedPosition: {
-    score: 1001,
+    score: -5,
     happened: detectRepeatedPosition,
-    isPenalty: true,
+    isFatal: false
   },
   walkedIntoWall: {
-    score: 1002,
+    score: -10,
     happened: detectIntoWall,
-    isPenalty: true,
+    isFatal: true
   },
   outOfMaze: {
-    score: 2003,
+    score: -10,
     happened: detectOutOfMaze,
-    isPenalty: true,
+    isFatal: true
   },
   validWalk: {
-    score: 0,
+    score: 5,
     happened: detectValidWalk,
-    isPenalty: false,
+    isFatal: false
   },
   foundDestiny: {
-    score: -10000,
+    score: 50,
     happened: detectFoundDestiny,
-    isPenalty: false,
+    isFatal: false
+  },
+  foundCoin: {
+    score: 50,
+    happened: detectFoundCoin,
+    isFatal: false
   },
 });
 
@@ -51,4 +56,8 @@ function detectValidWalk(cromossome) {
 function detectFoundDestiny(cromossome) {
   const [line, column] = cromossome.currentPosition;
   return line == 11 && column == 11;
+}
+
+function detectFoundCoin() {
+  return false;
 }

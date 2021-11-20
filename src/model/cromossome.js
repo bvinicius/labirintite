@@ -1,77 +1,40 @@
-import directions from "./directions";
-import scores from "./scores";
-
+import NeuralNetwork from "./neuralNetwork";
+import directions from './directions';
 class Cromossome {
-  constructor(directions, maze) {
-    this.score = 0;
-    this.currentPosition = [0, 0];
-    this.path = [[this.currentPosition[0], this.currentPosition[1]]];
-    this.directions = directions;
-    this.scores = [];
+  constructor(weights, maze) {
+    this.weights = [weights];
     this.maze = maze;
-    this.validPath = true;
-    this.reachesTarget = false;
-    this.moved = false;
-  }
-
-  isSolution() {
-    return this.validPath && this.reachesTarget;
+    this.score = 0;
+    this.path = [];
+    this.network = new NeuralNetwork(5, 4, 4);
+    this.currentPosition = [0, 0];
   }
 
   move() {
-    this.directions.forEach((direction) => {
-      this.walk(direction, this.maze);
-    });
+    const status = this.getCellStatus();
+    const output = this.network.getOutput(status);
+    // this.walk(output);
+    console.log(output);
   }
 
-  walk(eDirection) {
-    switch (eDirection) {
-      case directions.UP:
-        this.currentPosition[0]--;
-        break;
-      case directions.DOWN:
-        this.currentPosition[0]++;
-        break;
-      case directions.LEFT:
-        this.currentPosition[1]--;
-        break;
-      case directions.RIGHT:
-        this.currentPosition[1]++;
-        break;
-    }
+  getCellStatus() {
+    const [row, col] = this.currentPosition;
+    const cellUp = this.maze[row - 1] ? this.maze[row - 1][col] : -1;
+    const cellDown = this.maze[row + 1] ? this.maze[row + 1][col] : -1;
+    const cellLeft = this.maze[row][col - 1] === undefined ? -1 : this.maze[row][col - 1];
+    const cellRight = this.maze[row][col + 1] === undefined ? -1 : this.maze[row][col + 1];
 
-    this.computeScores();
-    this.path.push([...this.currentPosition]);
-    this.moved = true;
-
-    if (this.hasFinished()) {
-      this.reachesTarget = true;
-      return;
-    }
+    return {
+      [directions.UP]: +cellUp,
+      [directions.DOWN]: +cellDown,
+      [directions.LEFT]: +cellLeft,
+      [directions.RIGHT]: +cellRight,
+      position: this.getDistance()
+    };
   }
 
-  hasFinished() {
-    const [line, column] = this.currentPosition;
-    return line == 11 && column == 11;
-  }
-
-  /**
-   * Adiciona ou retira pontos de acordo com as penalidades.
-   * @param {*} position
-   */
-  computeScores() {
-    let stepScore = 0;
-    Object.values(scores).forEach((objScore) => {
-      if (objScore.happened(this)) {
-        stepScore += objScore.score;
-        if (objScore.isPenalty) {
-          this.validPath = false;
-        }
-      }
-    });
-
-    this.score += stepScore;
-    this.scores.push(stepScore);
+  getDistance() {
+    return 0.4; // TODO: implementar
   }
 }
 

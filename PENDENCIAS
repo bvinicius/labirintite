@@ -1,0 +1,2 @@
+- Implementar o método Walk
+- O método NeuralNetwork.getOutput retorna sempre a mesma coisa, deve ser um erro no neuron.getActivation();

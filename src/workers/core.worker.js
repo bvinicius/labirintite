@@ -10,8 +10,8 @@ function start(maze, parameters) {
   geneticManager.parameters = parameters;
 
   let population = geneticManager.populate(
-    parameters.POPULATION_SIZE,
-    parameters.MAX_STEPS,
+    10, // parameters.POPULATION_SIZE,
+    44, // parameters.MAX_STEPS,
     maze
   );
 
@@ -33,11 +33,10 @@ function start(maze, parameters) {
     population = geneticManager.generateNewPopulation(mom, dad);
 
     best = mom;
-    // console.log(
-    //   `ic ${iterationsCount} best score: ${best.score}; found S: ${
-    //     best.reachesTarget
-    //   }; valid: ${best.isSolution()}`
-    // );
+    console.log(
+      `ic ${iterationsCount} best score: ${best.score}; found S: ${best.reachesTarget
+      }; valid: ${best.isSolution()}`
+    );
 
     population.forEach((cromossome) => {
       if (cromossome.reachesTarget) {
