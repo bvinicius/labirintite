@@ -1,6 +1,6 @@
 import mazeBuilder from "./managers/mazeBuilder";
 
-const strInput = `E 0 0 0 0 0 0 0 0 0 0 0\n1 1 1 1 0 0 0 0 0 1 1 1\n1 0 0 0 0 1 1 1 0 1 1 0\n1 0 1 1 1 1 1 1 0 0 0 0\n0 0 0 1 0 0 0 0 1 0 1 1\n1 1 0 0 0 1 0 1 0 0 1 1\n1 1 1 0 1 1 0 0 0 1 1 0\n0 0 1 0 0 1 0 1 0 1 1 0\n0 0 0 0 1 1 0 0 0 1 1 0\n1 1 1 0 1 0 0 1 1 1 1 0\n1 1 1 0 1 0 0 0 0 1 1 1\n1 1 1 0 0 0 0 1 0 0 0 S`;
+const strInput = `E 0 0 1 0 2 0 0 2 1\n0 1 0 2 0 1 0 1 0 2\n0 0 2 0 1 1 2 0 1 1\n2 1 1 0 2 1 1 2 0 1\n2 0 0 0 0 1 1 0 1 1\n1 1 1 1 0 1 1 0 1 1\n1 0 1 1 0 1 1 2 0 2\n2 0 2 2 0 1 1 1 1 1\n1 2 1 2 0 0 2 2 1 1\n1 2 1 2 1 2 0 0 0 3`;
 const freeSpotsAmount = (strInput.match(/0/g) || []).length;
 
 const parameters = {

@@ -10,7 +10,7 @@ function start(maze, parameters) {
   geneticManager.parameters = parameters;
 
   let population = geneticManager.populate(
-    10, // parameters.POPULATION_SIZE,
+    1, // parameters.POPULATION_SIZE,
     44, // parameters.MAX_STEPS,
     maze
   );
@@ -23,49 +23,48 @@ function start(maze, parameters) {
 
   const firstPopulation = population;
   let lastPopulation = null;
+  let bContinue = true;
 
-  while (
-    iterationsCount < parameters.GENERATIONS &&
-    !(best && best.isSolution())
-  ) {
+  while (bContinue) {
     geneticManager.runPopulation(population);
-    const [mom, dad] = geneticManager.getBestParents(population);
-    population = geneticManager.generateNewPopulation(mom, dad);
+    // const [mom, dad] = geneticManager.getBestParents(population);
+    // population = geneticManager.generateNewPopulation(mom, dad);
 
-    best = mom;
-    console.log(
-      `ic ${iterationsCount} best score: ${best.score}; found S: ${best.reachesTarget
-      }; valid: ${best.isSolution()}`
-    );
+    // best = mom;
+    // console.log(
+    //   `ic ${iterationsCount} best score: ${best.score}; found S: ${best.reachesTarget
+    //   }; valid: ${best.isSolution()}`
+    // );
 
-    population.forEach((cromossome) => {
-      if (cromossome.reachesTarget) {
-        found++;
-      }
-    });
-    run += population.length;
+    // population.forEach((cromossome) => {
+    //   if (cromossome.reachesTarget) {
+    //     found++;
+    //   }
+    // });
+    // run += population.length;
 
-    iterationsCount++;
-    lastPopulation = population;
+    // iterationsCount++;
+    // lastPopulation = population;
+    bContinue = false;
   }
 
-  if (best.isSolution()) {
-    valid++;
-    console.log(`\nsolution found!`);
-    console.log(`cromossome who found: ${JSON.stringify(best)}`);
-  } else {
-    console.log("didnt find solution.");
-  }
+  // if (best.isSolution()) {
+  //   valid++;
+  //   console.log(`\nsolution found!`);
+  //   console.log(`cromossome who found: ${JSON.stringify(best)}`);
+  // } else {
+  //   console.log("didnt find solution.");
+  // }
 
-  console.log("first population", firstPopulation);
-  console.log("last population", lastPopulation);
+  // console.log("first population", firstPopulation);
+  // console.log("last population", lastPopulation);
 
-  const data = {
-    best,
-    found,
-    valid,
-    run,
-  };
+  // const data = {
+  //   best,
+  //   found,
+  //   valid,
+  //   run,
+  // };
 
-  self.postMessage(data);
+  // self.postMessage(data);
 }

@@ -4,12 +4,13 @@ const handler = require("serve-handler");
 const http = require("http");
 
 module.exports = () => {
+  const port = 3000;
   const server = http.createServer((request, response) => {
     return handler(request, response);
   });
 
-  server.listen(5001, () => {
-    console.log("Running at http://localhost:5001");
+  server.listen(port, () => {
+    console.log(`Running at http://localhost:${port}`);
   });
 
   return {

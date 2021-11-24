@@ -27,7 +27,7 @@ class GeneticManager {
 
   runPopulation(population) {
     population.forEach((cromossome) => {
-      cromossome.move();
+      cromossome.run();
     });
   }
 
