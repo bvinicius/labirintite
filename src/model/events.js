@@ -26,6 +26,11 @@ export default Object.freeze({
     happened: isOnCoin,
     isFatal: false
   },
+  repeatedCell: {
+    score: -5,
+    happened: isRepeated,
+    isFatal: false
+  }
 });
 
 function isOnWall(cromossome) {
@@ -48,4 +53,10 @@ function isOnDestination(cromossome) {
 
 function isOnCoin(cromossome) {
   return cromossome.currentCell === cellValues.COIN;
+}
+
+function isRepeated(cromossome) {
+  return false;
+  const [row, col] = cromossome.currentPosition;
+  return cromossome.path.some(position => position[0] === row && position[1] === col);
 }

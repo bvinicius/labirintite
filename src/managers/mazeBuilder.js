@@ -1,3 +1,5 @@
+import cellValues from "../model/cellValues";
+
 class MazeBuilder {
   constructor() {
     this.$_agent = null;
@@ -19,16 +21,19 @@ class MazeBuilder {
       row.forEach((cell) => {
         const $cell = document.createElement("td");
         switch (cell) {
-          case "0":
+          case cellValues.FREE:
             $cell.classList.add("free");
             break;
-          case "1":
+          case cellValues.WALL:
             $cell.classList.add("wall");
             break;
-          case "E":
+          case cellValues.COIN:
+            $cell.classList.add("coin");
+            break;
+          case cellValues.START:
             $cell.classList.add("start");
             break;
-          case "S":
+          case cellValues.DESTINATION:
             $cell.classList.add("end");
             break;
         }

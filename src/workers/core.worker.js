@@ -10,8 +10,9 @@ function start(maze, parameters) {
   geneticManager.parameters = parameters;
 
   let population = geneticManager.populate(
-    1, // parameters.POPULATION_SIZE,
-    44, // parameters.MAX_STEPS,
+    parameters.POPULATION_SIZE, //tamanho
+    parameters.WEIGHTS_AMOUNT, //nº de pesos por cromossomo
+    parameters.MAX_STEPS, //max steps
     maze
   );
 
@@ -27,8 +28,8 @@ function start(maze, parameters) {
 
   while (bContinue) {
     geneticManager.runPopulation(population);
-    // const [mom, dad] = geneticManager.getBestParents(population);
-    // population = geneticManager.generateNewPopulation(mom, dad);
+    const [mom, dad] = geneticManager.getBestParents(population);
+    population = geneticManager.generateNewPopulation(mom, dad);
 
     // best = mom;
     // console.log(

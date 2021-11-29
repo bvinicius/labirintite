@@ -1,15 +1,17 @@
 import NeuralNetwork from "./neuralNetwork";
 import directions from './directions';
 import events from "./events";
+import geneticManager from "../managers/geneticManager";
 class Cromossome {
   constructor(weights, maze) {
-    this.weights = [weights];
+    this.weights = [...weights];
     this.maze = maze;
     this.score = 0;
     this.network = new NeuralNetwork(5, 4, 4, weights);
     this.currentPosition = [0, 0];
     this.path = [[...this.currentPosition]];
     this.canContinue = true;
+    this.maxSteps = geneticManager.parameters.MAX_STEPS;
   }
 
   /**
@@ -24,13 +26,12 @@ class Cromossome {
    * Inicia os movimentos do agente no labirinto, até que ele termine.
    */
   run() {
-    let i = 0;
-    while (i < 100 || !this.canContinue) {
+    let stepCount = 0;
+    while (this.canContinue && stepCount < this.maxSteps) {
       const status = this.getCellStatus();
       const bestDirection = this.network.getOutput(status);
       this.takeStep(bestDirection);
-      console.log('\n\n');
-      i++;
+      stepCount++;
     }
     console.log('finished?');
   }
@@ -55,9 +56,9 @@ class Cromossome {
         break;
     }
 
-    this.path.push(this.currentPosition);
+    this.path.push([...this.currentPosition]);
     this.computeScores();
-    console.log(this.currentCell);
+    console.log([...this.path]);
   }
 
   /**
@@ -72,10 +73,12 @@ class Cromossome {
       return;
     }
 
-    this.score += arrEvents
+    const roundScore = +arrEvents
       .filter(event => event.happened(this) && !event.isFatal)
       .map(({ score }) => score)
-      .reduce((prev, curr) => prev + curr);
+      .reduce((prev, curr) => prev + curr, 0);
+
+    this.score += roundScore;
 
     if (events.foundDestiny.happened(this)) {
       this.gameWin();

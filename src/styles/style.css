@@ -32,6 +32,10 @@ body {
   background-color: red;
 }
 
+.coin {
+  background-color: yellow;
+}
+
 .end {
   background-color: green;
 }

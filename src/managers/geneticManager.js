@@ -2,17 +2,15 @@ import Cromossome from "../model/cromossome";
 import directions from "../model/directions";
 
 class GeneticManager {
-  constructor(maze, parameters) {
+  constructor() {
     this.directionsPossibilities = Object.keys(directions).length;
-    this.maze = maze;
-    this.parameters = parameters;
     this.mutationRate = 0.7;
   }
 
-  populate(quantity, steps) {
+  populate(quantity, weights) {
     return Array(quantity)
       .fill(null)
-      .map(() => Array.from({ length: steps }, () => this.getRandomWeight()))
+      .map(() => Array.from({ length: weights }, () => this.getRandomWeight()))
       .map((weights) => new Cromossome(weights, this.maze));
   }
 
@@ -37,9 +35,8 @@ class GeneticManager {
 
   getBestParents(population) {
     const sorted = population.sort((prev, next) => {
-      return prev.score - next.score;
+      return next.score - prev.score;
     });
-
     const slicedSorted = sorted.slice(0, 2);
     return slicedSorted;
   }
@@ -52,7 +49,6 @@ class GeneticManager {
     const mask = this.getBinaryMask(mom.weights.length);
     const children = this.uniformCrossOver(mom, dad, mask);
     this.mutate(children, this.mutationRate);
-    children.forEach((child) => (child.scores = []));
     population.push(...children);
     this.runPopulation(population);
 
@@ -68,19 +64,40 @@ class GeneticManager {
     const random = Math.random();
     const child = children[random > 0.5 ? 0 : 1];
 
-    const indexes = this.getWorstDirectionsIndexes(child);
+    const mutateAmount = Math.floor(this.mutationRate * child.weights.length);
+    const randomIndexes = this.getRandomIndexes(mutateAmount);
 
-    const numberOfDirections = Object.keys(directions).length;
-    indexes.forEach((index) => {
-      const oldDirection = child.directions[index];
-      let randomDirection;
-
-      do {
-        randomDirection = Math.floor(Math.random() * numberOfDirections);
-      } while (oldDirection === randomDirection);
-
-      child.directions[index] = randomDirection;
+    randomIndexes.forEach(index => {
+      const oldValue = child.weights[index];
+      console.log('old', oldValue);
+      child.weights[index] = oldValue * -1;
+      console.log('curr', child.weights[index]);
     });
+
+    // const indexes = this.getWorstDirectionsIndexes(child);
+
+    // const numberOfDirections = Object.keys(directions).length;
+    // indexes.forEach((index) => {
+    //   const oldDirection = child.directions[index];
+    //   let randomDirection;
+
+    //   do {
+    //     randomDirection = Math.floor(Math.random() * numberOfDirections);
+    //   } while (oldDirection === randomDirection);
+
+    //   child.directions[index] = randomDirection;
+    // });
+  }
+
+  getRandomIndexes(quantity) {
+    const indexes = [];
+    for (let i = 0; i < quantity; i++) {
+      const randomInt = Math.floor(Math.random() * 100);
+      if (randomInt < quantity && indexes.length < quantity) {
+        indexes.push(randomInt);
+      }
+    }
+    return indexes;
   }
 
   getWorstDirectionsIndexes(child) {
@@ -136,15 +153,15 @@ class GeneticManager {
     const firstChild = new Cromossome(firstChildDirection, this.maze);
     const secondChild = new Cromossome(secondChildDirection, this.maze);
 
-    mask.forEach((value, index) => {
-      if (value === 1) {
-        firstChild.scores.push(mom.scores[index]);
-        secondChild.scores.push(dad.scores[index]);
-      } else {
-        firstChild.scores.push(dad.scores[index]);
-        secondChild.scores.push(mom.scores[index]);
-      }
-    });
+    // mask.forEach((value, index) => {
+    //   if (value === 1) {
+    //     firstChild.scores.push(mom.scores[index]);
+    //     secondChild.scores.push(dad.scores[index]);
+    //   } else {
+    //     firstChild.scores.push(dad.scores[index]);
+    //     secondChild.scores.push(mom.scores[index]);
+    //   }
+    // });
 
     return [firstChild, secondChild];
   }
