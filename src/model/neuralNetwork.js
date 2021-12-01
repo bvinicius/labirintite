@@ -12,7 +12,6 @@ class NeuralNetwork {
     }
 
     mountGraph(weights) {
-        // weights = [...Array(44).keys()]; // só para testes
         const arrWeights = [...weights];
 
         const inLayer = [];

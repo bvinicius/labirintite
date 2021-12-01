@@ -2,6 +2,7 @@ import NeuralNetwork from "./neuralNetwork";
 import directions from './directions';
 import events from "./events";
 import geneticManager from "../managers/geneticManager";
+import { normalizedCellValues } from "./cellValues";
 class Cromossome {
   constructor(weights, maze) {
     this.weights = [...weights];
@@ -12,6 +13,7 @@ class Cromossome {
     this.path = [[...this.currentPosition]];
     this.canContinue = true;
     this.maxSteps = geneticManager.parameters.MAX_STEPS;
+    this.alreadyMoved = false;
   }
 
   /**
@@ -26,6 +28,11 @@ class Cromossome {
    * Inicia os movimentos do agente no labirinto, até que ele termine.
    */
   run() {
+    if (this.alreadyMoved) {
+      return;
+    }
+
+    this.alreadyMoved = true;
     let stepCount = 0;
     while (this.canContinue && stepCount < this.maxSteps) {
       const status = this.getCellStatus();
@@ -33,7 +40,6 @@ class Cromossome {
       this.takeStep(bestDirection);
       stepCount++;
     }
-    console.log('finished?');
   }
 
   /**
@@ -56,9 +62,11 @@ class Cromossome {
         break;
     }
 
+    // console.log(direction);
+
     this.path.push([...this.currentPosition]);
     this.computeScores();
-    console.log([...this.path]);
+    // console.log([...this.path]);
   }
 
   /**
@@ -67,26 +75,25 @@ class Cromossome {
    */
   computeScores() {
     const arrEvents = Object.values(events);
-    const hasSomeFatal = arrEvents.some(event => event.happened(this) && event.isFatal);
+    const hasSomeFatal = arrEvents.some(event => event.getScore(this) && event.isFatal);
     if (hasSomeFatal) {
       this.gameOver();
       return;
     }
 
     const roundScore = +arrEvents
-      .filter(event => event.happened(this) && !event.isFatal)
-      .map(({ score }) => score)
+      .map((event) => event.getScore(this))
       .reduce((prev, curr) => prev + curr, 0);
 
     this.score += roundScore;
 
-    if (events.foundDestiny.happened(this)) {
+    if (events.foundDestiny.getScore(this)) {
       this.gameWin();
     }
   }
 
   gameOver() {
-    console.log('game over.');
+    // console.log('game over.');
     this.canContinue = false;
   }
 
@@ -112,12 +119,13 @@ class Cromossome {
     const cellLeft = this.maze[row][colLeft] === undefined ? -1 : this.maze[row][colLeft];
     const cellRight = this.maze[row][colRight] === undefined ? -1 : this.maze[row][colRight];
 
+    const distance = this.getDistance();
     return {
-      [directions.UP]: +cellUp,
-      [directions.DOWN]: +cellDown,
-      [directions.LEFT]: +cellLeft,
-      [directions.RIGHT]: +cellRight,
-      position: this.getDistance()
+      [directions.UP]: normalizedCellValues[cellUp],
+      [directions.DOWN]: normalizedCellValues[cellDown],
+      [directions.LEFT]: normalizedCellValues[cellLeft],
+      [directions.RIGHT]: normalizedCellValues[cellRight],
+      position: distance % Math.floor(distance) || distance
     };
   }
 
@@ -126,7 +134,12 @@ class Cromossome {
    * @returns 
    */
   getDistance() {
-    return 0.4; // TODO: implementar
+    const lastIndex = this.maze.length - 1;
+    const [row, col] = this.currentPosition;
+
+    const xDelta = lastIndex - row;
+    const yDelta = lastIndex - col;
+    return Math.sqrt(Math.pow(xDelta, 2) + Math.pow(yDelta, 2));
   }
 }
 

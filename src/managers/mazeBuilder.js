@@ -1,4 +1,4 @@
-import cellValues from "../model/cellValues";
+import { cellValues } from "../model/cellValues";
 
 class MazeBuilder {
   constructor() {

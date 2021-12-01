@@ -3,13 +3,11 @@ import mazeBuilder from "./managers/mazeBuilder";
 const strInput = `0 0 0 1 0 2 0 0 2 1\n0 1 0 2 0 1 0 1 0 2\n0 0 2 0 1 1 2 0 1 1\n2 1 1 0 2 1 1 2 0 1\n2 0 0 0 0 1 1 0 1 1\n1 1 1 1 0 1 1 0 1 1\n1 0 1 1 0 1 1 2 0 2\n2 0 2 2 0 1 1 1 1 1\n1 2 1 2 0 0 2 2 1 1\n1 2 1 2 1 2 0 0 0 3`;
 
 const parameters = {
-  POPULATION_SIZE: 10,
-  MAX_STEPS: 100,
-  GENERATIONS: 1000,
+  POPULATION_SIZE: 2,
+  MAX_STEPS: 10,
+  GENERATIONS: 10,
   DELAY: 1000,
   WEIGHTS_AMOUNT: 44,
-  INPUT_NEURONS: 4,
-  OUTPUT_NEURONS: 4,
 };
 
 let lastCromossome = null;

@@ -17,37 +17,30 @@ function start(maze, parameters) {
   );
 
   let best = null;
-  let iterationsCount = 0;
-  let found = 0;
-  let valid = 0;
-  let run = 0;
+  let generationsCount = 0;
+  // let found = 0;
+  // let valid = 0;
+  // let run = 0;
 
-  const firstPopulation = population;
-  let lastPopulation = null;
-  let bContinue = true;
+  // const firstPopulation = population;
+  // let lastPopulation = null;
+  // let bContinue = true;
 
-  while (bContinue) {
+  while (generationsCount < parameters.GENERATIONS) {
     geneticManager.runPopulation(population);
     const [mom, dad] = geneticManager.getBestParents(population);
     population = geneticManager.generateNewPopulation(mom, dad);
 
-    // best = mom;
-    // console.log(
-    //   `ic ${iterationsCount} best score: ${best.score}; found S: ${best.reachesTarget
-    //   }; valid: ${best.isSolution()}`
-    // );
+    best = mom;
 
-    // population.forEach((cromossome) => {
-    //   if (cromossome.reachesTarget) {
-    //     found++;
-    //   }
-    // });
-    // run += population.length;
+    console.log(
+      `ic ${generationsCount} best score: ${best.score};`
+    );
 
-    // iterationsCount++;
-    // lastPopulation = population;
-    bContinue = false;
+    generationsCount++;
   }
+
+  console.log(best.path);
 
   // if (best.isSolution()) {
   //   valid++;

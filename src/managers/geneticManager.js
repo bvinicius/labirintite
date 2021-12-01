@@ -42,14 +42,13 @@ class GeneticManager {
   }
 
   generateNewPopulation(mom, dad) {
-    return this.recursivelyGenerateNewPopulation(mom, dad, []);
+    return this.recursivelyGenerateNewPopulation(mom, dad, [mom, dad]);
   }
 
   recursivelyGenerateNewPopulation(mom, dad, population) {
-    const mask = this.getBinaryMask(mom.weights.length);
-    const children = this.uniformCrossOver(mom, dad, mask);
-    this.mutate(children, this.mutationRate);
-    population.push(...children);
+    const child = this.averageCrossOver(mom, dad);
+    this.mutate(child, this.mutationRate);
+    population.push(child);
     this.runPopulation(population);
 
     if (population.length < this.parameters.POPULATION_SIZE) {
@@ -60,33 +59,14 @@ class GeneticManager {
     return population;
   }
 
-  mutate(children) {
-    const random = Math.random();
-    const child = children[random > 0.5 ? 0 : 1];
-
+  mutate(child) {
     const mutateAmount = Math.floor(this.mutationRate * child.weights.length);
     const randomIndexes = this.getRandomIndexes(mutateAmount);
 
     randomIndexes.forEach(index => {
       const oldValue = child.weights[index];
-      console.log('old', oldValue);
-      child.weights[index] = oldValue * -1;
-      console.log('curr', child.weights[index]);
+      child.weights[index] = oldValue * 0.5;
     });
-
-    // const indexes = this.getWorstDirectionsIndexes(child);
-
-    // const numberOfDirections = Object.keys(directions).length;
-    // indexes.forEach((index) => {
-    //   const oldDirection = child.directions[index];
-    //   let randomDirection;
-
-    //   do {
-    //     randomDirection = Math.floor(Math.random() * numberOfDirections);
-    //   } while (oldDirection === randomDirection);
-
-    //   child.directions[index] = randomDirection;
-    // });
   }
 
   getRandomIndexes(quantity) {
@@ -136,6 +116,12 @@ class GeneticManager {
     return [firstChild, secondChild];
   }
 
+  averageCrossOver(mom, dad) {
+    const avg = (num1, num2) => (num1 + num2) / 2;
+    const weights = mom.weights.map((weight, index) => avg(weight, dad.weights[index]));
+    return new Cromossome(weights, this.maze);
+  }
+
   uniformCrossOver(mom, dad, mask) {
     const firstChildDirection = [];
     const secondChildDirection = [];
@@ -152,17 +138,6 @@ class GeneticManager {
 
     const firstChild = new Cromossome(firstChildDirection, this.maze);
     const secondChild = new Cromossome(secondChildDirection, this.maze);
-
-    // mask.forEach((value, index) => {
-    //   if (value === 1) {
-    //     firstChild.scores.push(mom.scores[index]);
-    //     secondChild.scores.push(dad.scores[index]);
-    //   } else {
-    //     firstChild.scores.push(dad.scores[index]);
-    //     secondChild.scores.push(mom.scores[index]);
-    //   }
-    // });
-
     return [firstChild, secondChild];
   }
 }
