@@ -28,8 +28,9 @@ function start(maze, parameters) {
 
   while (generationsCount < parameters.GENERATIONS) {
     geneticManager.runPopulation(population);
-    const [mom, dad] = geneticManager.getBestParents(population);
-    population = geneticManager.generateNewPopulation(mom, dad);
+    const [bestCromossome] = geneticManager.getBestParents(population);
+    const [mom, dad] = geneticManager.tournament(population);
+    population = geneticManager.generateNewPopulation(mom, dad, bestCromossome, population);
 
     best = mom;
 
@@ -53,12 +54,12 @@ function start(maze, parameters) {
   // console.log("first population", firstPopulation);
   // console.log("last population", lastPopulation);
 
-  // const data = {
-  //   best,
-  //   found,
-  //   valid,
-  //   run,
-  // };
+  const data = {
+    best,
+    // found,
+    // valid,
+    // run,
+  };
 
-  // self.postMessage(data);
+  self.postMessage(data);
 }

@@ -40,7 +40,7 @@ class NeuralNetwork {
         const arrOutNeuronsActivations = [];
         this.inLayer.forEach(neuron => {
             neuron.setActivations(arrInputParameters);
-            arrInNeuronsActivations.push(neuron.getActivation());
+            arrInNeuronsActivations.push(neuron.getActivation(neuron.relu));
         });
         this.outLayer.forEach(neuron => {
             neuron.setActivations(arrInNeuronsActivations);
@@ -48,6 +48,7 @@ class NeuralNetwork {
         });
 
         const maxActivation = arrOutNeuronsActivations.reduce((prev, curr) => Math.max(prev || -10, curr || -10));
+
         return arrOutNeuronsActivations.findIndex(value => value === maxActivation);
     }
 

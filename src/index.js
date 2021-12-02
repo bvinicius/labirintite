@@ -3,9 +3,9 @@ import mazeBuilder from "./managers/mazeBuilder";
 const strInput = `0 0 0 1 0 2 0 0 2 1\n0 1 0 2 0 1 0 1 0 2\n0 0 2 0 1 1 2 0 1 1\n2 1 1 0 2 1 1 2 0 1\n2 0 0 0 0 1 1 0 1 1\n1 1 1 1 0 1 1 0 1 1\n1 0 1 1 0 1 1 2 0 2\n2 0 2 2 0 1 1 1 1 1\n1 2 1 2 0 0 2 2 1 1\n1 2 1 2 1 2 0 0 0 3`;
 
 const parameters = {
-  POPULATION_SIZE: 2,
-  MAX_STEPS: 10,
-  GENERATIONS: 10,
+  POPULATION_SIZE: 1000,
+  MAX_STEPS: 100,
+  GENERATIONS: 1,
   DELAY: 1000,
   WEIGHTS_AMOUNT: 44,
 };
@@ -56,18 +56,18 @@ function start() {
 }
 
 function onFinishRunning({ data }) {
-  const { best, found, run, valid } = data;
+  const { best /*, found, run, valid */ } = data;
   lastCromossome = best;
 
   const $btn = document.querySelector("#startButton");
   $btn.disabled = false;
   $btn.classList.remove("disabled");
 
-  const [$runField, $foundField, $validField] =
-    document.querySelectorAll(".result");
-  $runField.innerHTML = `<b>Nº de cromossomos testados:</b> ${run}`;
-  $foundField.innerHTML = `<b>Nº de cromossomos que encontram o caminho:</b> ${found}`;
-  $validField.innerHTML = `<b>Nº de cromossomos válidos:</b> ${valid}`;
+  // const [$runField, $foundField, $validField] =
+  //   document.querySelectorAll(".result");
+  // $runField.innerHTML = `<b>Nº de cromossomos testados:</b> ${run}`;
+  // $foundField.innerHTML = `<b>Nº de cromossomos que encontram o caminho:</b> ${found}`;
+  // $validField.innerHTML = `<b>Nº de cromossomos válidos:</b> ${valid}`;
 
   mazeBuilder.go(best.path);
 }

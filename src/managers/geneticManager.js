@@ -41,22 +41,41 @@ class GeneticManager {
     return slicedSorted;
   }
 
-  generateNewPopulation(mom, dad) {
-    return this.recursivelyGenerateNewPopulation(mom, dad, [mom, dad]);
+  generateNewPopulation(mom, dad, bestCromossome, initialPopulation) {
+    return this.recursivelyGenerateNewPopulation(mom, dad, initialPopulation, [bestCromossome]);
   }
 
-  recursivelyGenerateNewPopulation(mom, dad, population) {
-    const child = this.averageCrossOver(mom, dad);
+  recursivelyGenerateNewPopulation(mom, dad, initialPopulation, newPopulation) {
+    // const child = this.averageCrossOver(mom, dad);
+    const children = this.uniPointCrossover(mom, dad);
+    const child = Math.random > 0.5 ? children[0] : children[1];
     this.mutate(child, this.mutationRate);
-    population.push(child);
-    this.runPopulation(population);
+    newPopulation.push(...children);
+    this.runPopulation(newPopulation);
 
-    if (population.length < this.parameters.POPULATION_SIZE) {
-      const [newMom, newDad] = this.getBestParents(population);
-      return this.recursivelyGenerateNewPopulation(newMom, newDad, population);
+    if (newPopulation.length < this.parameters.POPULATION_SIZE) {
+      const [newMom, newDad] = this.tournament(initialPopulation);
+      return this.recursivelyGenerateNewPopulation(newMom, newDad, initialPopulation, newPopulation);
     }
 
-    return population;
+    return newPopulation;
+  }
+
+  tournament(population) {
+    const mom1Index = Math.floor(Math.random() * 100) % (population.length - 1);
+    const mom2Index = Math.floor(Math.random() * 100) % (population.length - 1);
+    const mom1 = population[mom1Index];
+    const mom2 = population[mom2Index];
+
+    const dad1Index = Math.floor(Math.random() * 100) % (population.length - 1);
+    const dad2Index = Math.floor(Math.random() * 100) % (population.length - 1);
+    const dad1 = population[dad1Index];
+    const dad2 = population[dad2Index];
+
+    const mom = mom1.score > mom2.score ? mom1 : mom2;
+    const dad = dad1.score > dad2.score ? dad1 : dad2;
+
+    return [mom, dad];
   }
 
   mutate(child) {
@@ -65,17 +84,18 @@ class GeneticManager {
 
     randomIndexes.forEach(index => {
       const oldValue = child.weights[index];
-      child.weights[index] = oldValue * 0.5;
+      child.weights[index] = oldValue * -1;
     });
   }
 
   getRandomIndexes(quantity) {
     const indexes = [];
     for (let i = 0; i < quantity; i++) {
-      const randomInt = Math.floor(Math.random() * 100);
-      if (randomInt < quantity && indexes.length < quantity) {
-        indexes.push(randomInt);
+      let randomInt;
+      while (!randomInt || randomInt >= quantity) {
+        randomInt = Math.floor(Math.random() * 100);
       }
+      indexes.push(randomInt);
     }
     return indexes;
   }
@@ -97,22 +117,22 @@ class GeneticManager {
    * @param {*} dad
    */
   uniPointCrossover(mom, dad) {
-    const momSequence = mom.directions;
-    const dadSequence = dad.directions;
+    const momSequence = mom.weights;
+    const dadSequence = dad.weights;
 
     const slicePoint = Math.floor(Math.random() * momSequence.length);
 
-    const firstChildDirections = [
+    const firstChildWeights = [
       ...momSequence.slice(0, slicePoint),
       ...dadSequence.slice(slicePoint),
     ];
-    const secondChildDirections = [
+    const secondChildWeights = [
       ...dadSequence.slice(0, slicePoint),
       ...momSequence.slice(slicePoint),
     ];
 
-    const firstChild = new Cromossome(firstChildDirections, this.maze);
-    const secondChild = new Cromossome(secondChildDirections, this.maze);
+    const firstChild = new Cromossome(firstChildWeights, this.maze);
+    const secondChild = new Cromossome(secondChildWeights, this.maze);
     return [firstChild, secondChild];
   }
 

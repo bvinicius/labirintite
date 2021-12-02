@@ -108,6 +108,9 @@ class Cromossome {
    */
   getCellStatus() {
     const [row, col] = this.currentPosition;
+    if (row < 0 || col < 0) {
+      return;
+    }
 
     const rowUp = this.maze[row - 1];
     const rowDown = this.maze[row + 1];

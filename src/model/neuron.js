@@ -3,7 +3,7 @@ class Neuron {
         this.weights = weights;
         this.layer = layer;
         this.activations = [];
-        this.defaultNormalizationFuncion = (x) => x;
+        this.fnDefaultActivationFunction = (x) => x;
     }
 
     get bias() {
@@ -18,7 +18,7 @@ class Neuron {
      * Se este neurônio fizer parte da camada de saída, o `arrActivations` será a lista do `Y` de cada neurônio da camada anterior.
      */
     setActivations(arrActivations) {
-        this.activations = arrActivations;
+        this.activations = [...arrActivations];
     }
 
     /**
@@ -26,13 +26,21 @@ class Neuron {
      * @param {Function} normalizationFuncion a função de normalização do resultado calculado, ex: Sigmoide. Caso não informado, não é feita nenhuma normalização sobre o valor.
      * @returns 
      */
-    getActivation() {
+    getActivation(fnActivation = this.fnDefaultActivationFunction) {
         const productSum = this.weights
             .slice(1)
             .map((weight, index) => weight * this.activations[index])
             .reduce((prev, curr) => prev + curr);
 
-        return productSum + this.bias;
+        return fnActivation(productSum + this.bias);
+    }
+
+    flush() {
+        this.activations = [];
+    }
+
+    relu(x) {
+        return Math.max(0, x);
     }
 }
 export default Neuron;
