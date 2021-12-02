@@ -35,6 +35,9 @@ class NeuralNetwork {
     }
 
     getOutput(objInputParameters) {
+        if (!objInputParameters) {
+            return -1;
+        }
         const arrInputParameters = Object.values(objInputParameters);
         const arrInNeuronsActivations = [];
         const arrOutNeuronsActivations = [];

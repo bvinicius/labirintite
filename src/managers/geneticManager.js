@@ -46,7 +46,6 @@ class GeneticManager {
   }
 
   recursivelyGenerateNewPopulation(mom, dad, initialPopulation, newPopulation) {
-    // const child = this.averageCrossOver(mom, dad);
     const children = this.uniPointCrossover(mom, dad);
     const child = Math.random > 0.5 ? children[0] : children[1];
     this.mutate(child, this.mutationRate);

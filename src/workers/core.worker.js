@@ -18,13 +18,6 @@ function start(maze, parameters) {
 
   let best = null;
   let generationsCount = 0;
-  // let found = 0;
-  // let valid = 0;
-  // let run = 0;
-
-  // const firstPopulation = population;
-  // let lastPopulation = null;
-  // let bContinue = true;
 
   while (generationsCount < parameters.GENERATIONS) {
     geneticManager.runPopulation(population);
@@ -42,24 +35,5 @@ function start(maze, parameters) {
   }
 
   console.log(best.path);
-
-  // if (best.isSolution()) {
-  //   valid++;
-  //   console.log(`\nsolution found!`);
-  //   console.log(`cromossome who found: ${JSON.stringify(best)}`);
-  // } else {
-  //   console.log("didnt find solution.");
-  // }
-
-  // console.log("first population", firstPopulation);
-  // console.log("last population", lastPopulation);
-
-  const data = {
-    best,
-    // found,
-    // valid,
-    // run,
-  };
-
-  self.postMessage(data);
+  postMessage(best.path);
 }

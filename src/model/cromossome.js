@@ -62,11 +62,8 @@ class Cromossome {
         break;
     }
 
-    // console.log(direction);
-
     this.path.push([...this.currentPosition]);
     this.computeScores();
-    // console.log([...this.path]);
   }
 
   /**
@@ -93,7 +90,6 @@ class Cromossome {
   }
 
   gameOver() {
-    // console.log('game over.');
     this.canContinue = false;
   }
 
@@ -108,7 +104,12 @@ class Cromossome {
    */
   getCellStatus() {
     const [row, col] = this.currentPosition;
-    if (row < 0 || col < 0) {
+    if (
+      row < 0
+      || row >= this.maze.length
+      || col < 0
+      || col >= this.maze.length
+    ) {
       return;
     }
 
